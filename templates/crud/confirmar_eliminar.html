@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo_pagina }}{% endblock %}
+{% block contenido %}
+<div class="card shadow-sm">
+    <div class="card-header"><i class="bi bi-exclamation-triangle"></i> {{ titulo_pagina }}</div>
+    <div class="card-body">
+        <p class="mb-3">{{ mensaje_confirmacion }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-peligro"><i class="bi bi-trash"></i> {{ texto_boton|default:"Confirmar" }}</button>
+            <a href="{{ url_volver }}" class="btn btn-outline-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

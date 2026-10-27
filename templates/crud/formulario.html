@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{# Plantilla genérica de alta/edición: cada vista entrega form, titulo_pagina y url_volver. #}
+{% block titulo %}{{ titulo_pagina }}{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <h1 class="h2 mb-0">{{ titulo_pagina }}</h1>
+    {% if url_volver %}<a href="{{ url_volver }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Volver</a>{% endif %}
+</div>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            {% include "parciales/formulario_cuerpo.html" %}
+            {% block formsets %}{% endblock %}
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check2-circle"></i> {{ texto_boton|default:"Guardar" }}</button>
+            {% if url_volver %}<a href="{{ url_volver }}" class="btn btn-outline-secondary">Cancelar</a>{% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}

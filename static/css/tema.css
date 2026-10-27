@@ -1,10 +1,11 @@
 /* ============================================================
-   STATIC/CSS/TEMA.CSS / PALETA Y ESTILO VISUAL DEL SITIO
+   STATIC/CSS/TEMA.CSS / PALETA Y ESTILO VISUAL DE PETCARE
    Única fuente de colores del proyecto: rosado pastel (principal),
    café claro pastel (secundario), café pastel más oscuro (acento)
    y fondo rosado muy claro. Sobrescribe las variables de Bootstrap,
    así que cambiar la paleta solo requiere editar este archivo.
-   Estilo: moderno, minimalista y amigable.
+   Estilo: moderno, minimalista y amigable (misma familia visual que el
+   proyecto de referencia). Usado por la web, el calendario y las páginas de error.
    ============================================================ */
 
 /* ============================================================
@@ -25,7 +26,7 @@
     --color-borde: #f0d9df;
     --color-sombra: rgba(176, 137, 104, 0.14);
 
-    /* Estados de matrícula */
+    /* Estados de cita y recordatorio (fondo + texto) */
     --estado-pendiente-fondo: #fdecc8;
     --estado-pendiente-texto: #7a5500;
     --estado-pagado-fondo: #d4eed9;
@@ -34,21 +35,6 @@
     --estado-completado-texto: #28496f;
     --estado-cancelado-fondo: #f6d0d0;
     --estado-cancelado-texto: #8a2e2e;
-
-    /* Tipos y modalidades */
-    --tipo-curso-fondo: var(--color-secundario-suave);
-    --tipo-curso-texto: var(--color-acento-oscuro);
-    --tipo-bootcamp-fondo: var(--color-principal-suave);
-    --tipo-bootcamp-texto: #8e3651;
-    --tipo-taller-fondo: #e6def4;
-    --tipo-taller-texto: #4f3d7a;
-    --modalidad-fondo: #ffffff;
-    --modalidad-texto: var(--color-texto-suave);
-
-    /* Cupos */
-    --cupos-ok: #8cc9a0;
-    --cupos-medio: #f2c46d;
-    --cupos-agotado: #e38b8b;
 
     /* Tipografía y forma */
     --fuente-base: "Nunito", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
@@ -134,16 +120,16 @@ a:hover { text-decoration: underline; }
 /* ============================================================
    NAVBAR
    ============================================================ */
-.navbar-academia {
+.navbar-petcare {
     background-color: var(--color-superficie);
     border-bottom: 3px solid var(--color-principal);
     box-shadow: 0 2px 12px var(--color-sombra);
 }
-.navbar-academia .navbar-brand {
+.navbar-petcare .navbar-brand {
     color: var(--color-texto);
     font-weight: 800;
 }
-.navbar-academia .navbar-brand .marca-icono {
+.navbar-petcare .navbar-brand .marca-icono {
     background: var(--color-principal);
     color: var(--color-texto);
     border-radius: 50%;
@@ -153,25 +139,25 @@ a:hover { text-decoration: underline; }
     align-items: center;
     justify-content: center;
 }
-.navbar-academia .nav-link {
+.navbar-petcare .nav-link {
     color: var(--color-texto-suave);
     font-weight: 700;
     border-radius: var(--radio-sm);
     padding-inline: 0.8rem !important;
 }
-.navbar-academia .nav-link:hover,
-.navbar-academia .nav-link.active {
+.navbar-petcare .nav-link:hover,
+.navbar-petcare .nav-link.active {
     color: var(--color-texto);
     background-color: var(--color-principal-suave);
     text-decoration: none;
 }
-.navbar-academia .dropdown-menu {
+.navbar-petcare .dropdown-menu {
     border-color: var(--color-borde);
     border-radius: var(--radio-sm);
     box-shadow: 0 8px 24px var(--color-sombra);
 }
-.navbar-academia .dropdown-item:active,
-.navbar-academia .dropdown-item.active {
+.navbar-petcare .dropdown-item:active,
+.navbar-petcare .dropdown-item.active {
     background-color: var(--color-principal-suave);
     color: var(--color-texto);
 }
@@ -322,7 +308,7 @@ a:hover { text-decoration: underline; }
 /* ============================================================
    BADGES: ESTADOS, TIPOS Y MODALIDADES
    ============================================================ */
-.badge-estado, .badge-tipo, .badge-modalidad, .badge-suave {
+.badge-estado, .badge-modalidad, .badge-suave {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
@@ -337,9 +323,6 @@ a:hover { text-decoration: underline; }
 .badge-estado-pagado { background: var(--estado-pagado-fondo); color: var(--estado-pagado-texto); }
 .badge-estado-completado { background: var(--estado-completado-fondo); color: var(--estado-completado-texto); }
 .badge-estado-cancelado { background: var(--estado-cancelado-fondo); color: var(--estado-cancelado-texto); }
-.badge-tipo-curso { background: var(--tipo-curso-fondo); color: var(--tipo-curso-texto); }
-.badge-tipo-bootcamp { background: var(--tipo-bootcamp-fondo); color: var(--tipo-bootcamp-texto); }
-.badge-tipo-taller { background: var(--tipo-taller-fondo); color: var(--tipo-taller-texto); }
 .badge-modalidad {
     background: var(--modalidad-fondo);
     color: var(--modalidad-texto);
@@ -348,34 +331,6 @@ a:hover { text-decoration: underline; }
 .badge-suave { background: var(--color-secundario-suave); color: var(--color-acento-oscuro); }
 .badge-activo { background: var(--estado-pagado-fondo); color: var(--estado-pagado-texto); }
 .badge-inactivo { background: var(--estado-cancelado-fondo); color: var(--estado-cancelado-texto); }
-
-/* ============================================================
-   BARRA DE OCUPACIÓN DE CUPOS
-   ============================================================ */
-.barra-cupos {
-    height: 0.6rem;
-    border-radius: 999px;
-    background-color: var(--color-secundario-suave);
-}
-.barra-cupos .progress-bar { background-color: var(--cupos-ok); border-radius: 999px; }
-.barra-cupos.medio .progress-bar { background-color: var(--cupos-medio); }
-.barra-cupos.agotado .progress-bar { background-color: var(--cupos-agotado); }
-
-/* ============================================================
-   ÍCONO DE ÁREA
-   ============================================================ */
-.icono-area {
-    width: 2.4rem;
-    height: 2.4rem;
-    border-radius: 0.75rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-secundario-suave);
-    color: var(--color-acento-oscuro);
-    font-size: 1.15rem;
-    flex-shrink: 0;
-}
 
 /* ============================================================
    TABLAS
@@ -395,15 +350,6 @@ a:hover { text-decoration: underline; }
     text-transform: uppercase;
     letter-spacing: 0.04em;
     white-space: nowrap;
-}
-.codigo-uuid {
-    font-family: "Cascadia Code", Consolas, "Courier New", monospace;
-    font-size: 0.82rem;
-    background: var(--color-fondo);
-    color: var(--color-acento-oscuro);
-    border-radius: 0.4rem;
-    padding: 0.1rem 0.4rem;
-    word-break: break-all;
 }
 
 /* ============================================================
@@ -461,47 +407,6 @@ a:hover { text-decoration: underline; }
 .estado-vacio .bi { font-size: 3rem; color: var(--color-principal); }
 
 /* ============================================================
-   LÍNEA DE TIEMPO (HISTORIAL DE ESTADOS)
-   ============================================================ */
-.linea-tiempo { list-style: none; padding-left: 0; margin: 0; }
-.linea-tiempo li {
-    position: relative;
-    padding-left: 1.6rem;
-    padding-bottom: 1rem;
-    border-left: 2px solid var(--color-borde);
-    margin-left: 0.5rem;
-}
-.linea-tiempo li:last-child { border-left-color: transparent; padding-bottom: 0; }
-.linea-tiempo li::before {
-    content: "";
-    position: absolute;
-    left: -0.45rem;
-    top: 0.2rem;
-    width: 0.8rem;
-    height: 0.8rem;
-    border-radius: 50%;
-    background: var(--color-principal);
-    border: 2px solid var(--color-superficie);
-}
-
-/* ============================================================
-   PANTALLA DE REDIRECCIÓN
-   ============================================================ */
-.redireccion-icono { font-size: 4.5rem; color: var(--color-principal-oscuro); }
-.cuenta-regresiva {
-    width: 4.5rem;
-    height: 4.5rem;
-    border-radius: 50%;
-    background: var(--color-principal-suave);
-    color: var(--color-principal-oscuro);
-    font-size: 2rem;
-    font-weight: 800;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* ============================================================
    FOOTER (también se usa en Swagger, ReDoc y la Browsable API,
    por eso no depende de clases de Bootstrap)
    ============================================================ */
@@ -525,30 +430,6 @@ a:hover { text-decoration: underline; }
 .pie-pagina .pie-enlaces a:hover { text-decoration: underline; }
 
 /* ============================================================
-   DOCUMENTACIÓN
-   ============================================================ */
-.paso-numero {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background: var(--color-principal);
-    color: var(--color-texto);
-    font-weight: 800;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-pre.bloque-codigo {
-    background: var(--color-texto);
-    color: var(--color-secundario-suave);
-    border-radius: var(--radio-sm);
-    padding: 1rem;
-    font-size: 0.85rem;
-    white-space: pre-wrap;
-}
-
-/* ============================================================
    AJUSTES RESPONSIVOS
    ============================================================ */
 @media (max-width: 575.98px) {
@@ -556,3 +437,80 @@ pre.bloque-codigo {
     .tarjeta-estadistica .valor { font-size: 1.5rem; }
     .btn { padding-inline: 0.9rem; }
 }
+
+/* ============================================================
+   INSIGNIAS DE ESTADO DE CITA
+   Mismas clases que se usan en el Django Admin (petcare_admin.css).
+   ============================================================ */
+.badge-cita-programada { background: var(--estado-pendiente-fondo); color: var(--estado-pendiente-texto); }
+.badge-cita-confirmada { background: var(--estado-completado-fondo); color: var(--estado-completado-texto); }
+.badge-cita-atendida { background: var(--estado-pagado-fondo); color: var(--estado-pagado-texto); }
+.badge-cita-cancelada { background: var(--estado-cancelado-fondo); color: var(--estado-cancelado-texto); }
+.badge-cita-no_asistio { background: var(--color-secundario-suave); color: var(--color-acento-oscuro); }
+
+/* ============================================================
+   RECORDATORIOS: URGENCIA POR COLOR
+   vencido = rojo suave, 7 días = ámbar, 30 días = azul suave
+   ============================================================ */
+.urgencia-vencido { border-left: 6px solid var(--estado-cancelado-texto); }
+.urgencia-semana { border-left: 6px solid #e0a100; }
+.urgencia-mes { border-left: 6px solid var(--estado-completado-texto); }
+.badge-rec-pendiente { background: var(--estado-pendiente-fondo); color: var(--estado-pendiente-texto); }
+.badge-rec-enviado { background: var(--estado-completado-fondo); color: var(--estado-completado-texto); }
+.badge-rec-completado { background: var(--estado-pagado-fondo); color: var(--estado-pagado-texto); }
+.badge-rec-vencido { background: var(--estado-cancelado-fondo); color: var(--estado-cancelado-texto); }
+
+/* ============================================================
+   HORARIOS DEL PROFESIONAL (calendario y agendamiento)
+   ============================================================ */
+.horario-chip {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 0.3rem 0.85rem;
+    margin: 0.15rem;
+    font-weight: 800;
+    font-size: 0.85rem;
+    border: 1px solid transparent;
+}
+.horario-libre { background: var(--estado-pagado-fondo); color: var(--estado-pagado-texto); cursor: pointer; }
+.horario-libre:hover { background: var(--estado-pagado-texto); color: #fff; text-decoration: none; }
+.horario-ocupado { background: var(--estado-cancelado-fondo); color: var(--estado-cancelado-texto); }
+.horario-bloqueado { background: var(--color-secundario-suave); color: var(--color-acento-oscuro); }
+.horario-pasado { background: var(--color-fondo); color: var(--color-texto-suave); border-color: var(--color-borde); }
+#calendario { min-height: 640px; }
+.fc { --fc-border-color: var(--color-borde); --fc-button-bg-color: var(--color-principal-oscuro); --fc-button-border-color: var(--color-principal-oscuro); --fc-button-hover-bg-color: var(--color-acento-oscuro); --fc-button-hover-border-color: var(--color-acento-oscuro); --fc-button-active-bg-color: var(--color-acento-oscuro); --fc-today-bg-color: var(--color-principal-suave); }
+
+/* ============================================================
+   FICHA CLÍNICA: LÍNEA DE TIEMPO
+   ============================================================ */
+.linea-tiempo { list-style: none; padding-left: 0; margin: 0; }
+.linea-tiempo > li {
+    position: relative;
+    padding-left: 1.6rem;
+    padding-bottom: 1.2rem;
+    border-left: 2px solid var(--color-borde);
+    margin-left: 0.5rem;
+}
+.linea-tiempo > li:last-child { border-left-color: transparent; padding-bottom: 0; }
+.linea-tiempo > li::before {
+    content: "";
+    position: absolute;
+    left: -0.5rem;
+    top: 0.25rem;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    background: var(--color-principal);
+    border: 2px solid var(--color-superficie);
+}
+.linea-tiempo > li.tipo-vacuna::before { background: var(--estado-pagado-texto); }
+.linea-tiempo > li.tipo-control::before { background: var(--color-acento); }
+
+/* Foto de mascota (se sirve desde una vista protegida) */
+.foto-mascota { width: 100%; max-width: 220px; aspect-ratio: 1; object-fit: cover; border-radius: var(--radio); border: 3px solid var(--color-principal-suave); }
+.foto-mascota-sm { width: 44px; height: 44px; object-fit: cover; border-radius: 50%; border: 2px solid var(--color-principal-suave); }
+.icono-mascota-sm { width: 44px; height: 44px; border-radius: 50%; background: var(--color-principal-suave); color: var(--color-principal-oscuro); display: inline-flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+
+/* Página de error */
+.pagina-error { text-align: center; padding: 3rem 1rem; }
+.pagina-error .codigo-error { font-size: 5.5rem; font-weight: 800; color: var(--color-principal-oscuro); line-height: 1; }

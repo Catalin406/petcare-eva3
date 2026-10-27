@@ -1,0 +1,8 @@
+{# Errores generales del formulario + todos los campos visibles. #}
+{% if form.non_field_errors %}
+<div class="alert alert-danger">
+    {% for error in form.non_field_errors %}<div><i class="bi bi-exclamation-triangle"></i> {{ error }}</div>{% endfor %}
+</div>
+{% endif %}
+{% for campo in form.visible_fields %}{% include "parciales/campo_form.html" %}{% endfor %}
+{% for oculto in form.hidden_fields %}{{ oculto }}{% endfor %}

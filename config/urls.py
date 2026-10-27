@@ -17,3 +17,8 @@ urlpatterns = [
     path("api/auth/token/", TokenConRolView.as_view(), name="token_obtener"),
     path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refrescar"),
 ]
+
+# Páginas de error con el diseño del sitio
+handler403 = "core.views.error_403"
+handler404 = "core.views.error_404"
+handler500 = "core.views.error_500"

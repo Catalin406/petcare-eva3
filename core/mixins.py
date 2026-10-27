@@ -16,3 +16,16 @@ class RolRequeridoMixin(LoginRequiredMixin):
             if request.user.rol not in self.roles_permitidos:
                 raise PermissionDenied("Tu rol no tiene acceso a esta sección.")
         return super().dispatch(request, *args, **kwargs)
+
+
+class PaginacionConFiltrosMixin:
+    """Conserva los filtros (?q=...) al cambiar de página en los listados."""
+
+    paginate_by = 12
+
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        parametros = self.request.GET.copy()
+        parametros.pop("page", None)
+        contexto["consulta_sin_pagina"] = parametros.urlencode() + "&" if parametros else ""
+        return contexto
