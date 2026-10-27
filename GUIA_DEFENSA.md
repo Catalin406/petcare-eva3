@@ -134,7 +134,7 @@ Ten abiertas **dos ventanas** (una normal y una privada) para cambiar de usuario
 6. Cancela una cita propia (respetando la anticipación mínima).
 
 ### D. API y Swagger (2 min)
-1. Abre `/api/docs/`. **Authorize** tras `POST /api/auth/token/` con `carolina.rojas`.
+1. Con la sesión ya iniciada en el sitio, abre `/api/docs/` (sin sesión redirige al login). **Authorize** tras `POST /api/auth/token/` con `carolina.rojas`.
 2. `GET /api/mascotas/` → solo las suyas. `GET /api/mascotas/{id de otra}` → **404**.
 3. Entra con `recepcion`: `GET /api/atenciones/` → **403**.
 

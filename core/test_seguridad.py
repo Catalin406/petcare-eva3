@@ -26,7 +26,7 @@ BASE = Path(settings.BASE_DIR)
 ENTORNO_PRODUCCION = {
     "DEBUG": "False",
     "SECRET_KEY": "k9$Xp2#vQ7!mZr4@Lw8&Tn5^Yb3*Hc6(Jd1)Fg0-Sa+Re=UiOoPlMqNzBxCvWy",
-    "ALLOWED_HOSTS": "codelab-catalina.duckdns.org,54.152.231.63",
+    "ALLOWED_HOSTS": "codelab-catalina.duckdns.org,54.152.231.63,localhost,127.0.0.1",
     "CSRF_TRUSTED_ORIGINS": "https://codelab-catalina.duckdns.org",
     "DETRAS_DE_PROXY_HTTPS": "True",
 }
@@ -208,11 +208,23 @@ class ContrasenasTests(TestCase):
 
 
 class DocumentacionApiTests(TestCase):
-    def test_swagger_y_esquema_disponibles(self):
-        self.assertEqual(self.client.get("/api/docs/").status_code, 200)
-        r = self.client.get("/api/schema/")
-        self.assertEqual(r.status_code, 200)
-        self.assertIn(b"/api/citas/", r.content)
+    def test_swagger_y_esquema_sin_sesion_redirigen_al_login(self):
+        for ruta in ("/api/docs/", "/api/schema/"):
+            r = self.client.get(ruta)
+            self.assertEqual(r.status_code, 302, ruta)
+            self.assertTrue(r["Location"].startswith("/login/?next=" + ruta), r["Location"])
+
+    def test_swagger_y_esquema_con_sesion_de_cualquier_rol(self):
+        for rol in (Rol.ADMINISTRADOR, Rol.RECEPCIONISTA, Rol.VETERINARIO, Rol.TUTOR):
+            self.client.logout()
+            self.client.force_login(crear_usuario(f"doc_{rol}", rol))
+            self.assertEqual(self.client.get("/api/docs/").status_code, 200, rol)
+            r = self.client.get("/api/schema/")
+            self.assertEqual(r.status_code, 200, rol)
+            self.assertIn(b"/api/citas/", r.content)
+
+    def test_los_endpoints_de_la_api_siguen_respondiendo_401_y_no_redirigen(self):
+        self.assertEqual(self.client.get("/api/citas/").status_code, 401)
 
     def test_jwt_incluye_expiracion_y_refresh(self):
         crear_usuario("api", Rol.TUTOR)

@@ -4,6 +4,7 @@
 # en /api/docs/ y Django Admin en /admin/.
 # ============================================================
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenRefreshView
@@ -22,8 +23,10 @@ urlpatterns = [
     # API REST
     path("api/auth/token/", TokenConRolView.as_view(), name="token_obtener"),
     path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refrescar"),
-    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-    path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger"),
+    # La documentación exige sesión iniciada (cualquier rol): coherente con "todo exige login".
+    # El middleware deja pasar /api/ (los endpoints responden 401 JSON), por eso se protege aquí.
+    path("api/schema/", login_required(SpectacularAPIView.as_view()), name="schema"),
+    path("api/docs/", login_required(SpectacularSwaggerView.as_view(url_name="schema")), name="swagger"),
     path("api/", include("config.api_urls")),
 ]
 

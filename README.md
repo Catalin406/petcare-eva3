@@ -7,7 +7,7 @@ Proyecto de la **Evaluación 3 (individual)** de *Desarrollo Backend* — INACAP
 |---|---|
 | **Sitio en producción** | <https://codelab-catalina.duckdns.org> |
 | **IP pública (AWS EC2)** | `54.152.231.63` |
-| **Documentación de la API (Swagger)** | <https://codelab-catalina.duckdns.org/api/docs/> |
+| **Documentación de la API (Swagger)** | <https://codelab-catalina.duckdns.org/api/docs/> (exige iniciar sesión en el sitio, cualquier rol) |
 | **Django Admin** | <https://codelab-catalina.duckdns.org/admin/> |
 | **Repositorio** | <https://github.com/Catalin406/petcare-eva3> |
 
@@ -154,7 +154,7 @@ La lógica de negocio vive en cada `servicios.py`; las vistas web, la API, el Ad
 
 **Web** (todas exigen login): `/` · `/login/` · `/logout/` (POST) · `/tutores/` · `/mascotas/` · `/agenda/calendario/` · `/agenda/citas/` · `/agenda/disponibilidad/` · `/clinica/fichas/<mascota>/` · `/clinica/atenciones/nueva/` · `/recordatorios/` · `/vacunacion/{catalogo,aplicadas,controles}/` · `/admin/`
 
-**API** (JWT o sesión): `POST /api/auth/token/` · `POST /api/auth/token/refresh/` · `/api/tutores/` · `/api/mascotas/` (+ `/{id}/foto/`) · `/api/profesionales/` (+ `/{id}/horarios/?fecha=`) · `/api/disponibilidades/` · `/api/bloqueos/` · `/api/citas/` (+ `cambiar-estado`, `cancelar`, `historial`) · `/api/agenda/eventos/` · `/api/fichas/` · `/api/atenciones/` · `/api/recetas/` · `/api/examenes/` (+ `/{id}/archivo/`) · `/api/vacunas/` · `/api/registros-vacuna/` · `/api/controles/` · `/api/recordatorios/` (+ `panel`, `generar`) · Swagger en `/api/docs/`
+**API** (JWT o sesión): `POST /api/auth/token/` · `POST /api/auth/token/refresh/` · `/api/tutores/` · `/api/mascotas/` (+ `/{id}/foto/`) · `/api/profesionales/` (+ `/{id}/horarios/?fecha=`) · `/api/disponibilidades/` · `/api/bloqueos/` · `/api/citas/` (+ `cambiar-estado`, `cancelar`, `historial`) · `/api/agenda/eventos/` · `/api/fichas/` · `/api/atenciones/` · `/api/recetas/` · `/api/examenes/` (+ `/{id}/archivo/`) · `/api/vacunas/` · `/api/registros-vacuna/` · `/api/controles/` · `/api/recordatorios/` (+ `panel`, `generar`) · Swagger en `/api/docs/` y esquema en `/api/schema/` (ambos exigen sesión iniciada)
 
 ## 9. Credenciales de demostración
 
@@ -212,7 +212,7 @@ python manage.py check --deploy                           # debe terminar sin ad
 mkdir -p archivos_privados && chmod 750 archivos_privados
 ```
 
-Variables del `.env` del servidor: `SECRET_KEY`, `DEBUG=False`, `ALLOWED_HOSTS=codelab-catalina.duckdns.org,54.152.231.63`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST=localhost`, `DB_PORT=5432`, `CSRF_TRUSTED_ORIGINS=https://codelab-catalina.duckdns.org`, `DETRAS_DE_PROXY_HTTPS=True`, `ALUMNO_NOMBRE`.
+Variables del `.env` del servidor: `SECRET_KEY`, `DEBUG=False`, `ALLOWED_HOSTS=codelab-catalina.duckdns.org,54.152.231.63,localhost,127.0.0.1` (los dos últimos sirven para probar con `curl` desde el propio servidor), `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST=localhost`, `DB_PORT=5432`, `CSRF_TRUSTED_ORIGINS=https://codelab-catalina.duckdns.org`, `DETRAS_DE_PROXY_HTTPS=True`, `ALUMNO_NOMBRE`.
 
 ### 10.4 Gunicorn como servicio
 
