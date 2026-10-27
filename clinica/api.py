@@ -11,6 +11,7 @@ from core.permisos_api import PorRol
 from usuarios.models import Rol
 
 from . import servicios
+from .models import Atencion, Examen, FichaClinica, Receta
 from .serializers import (
     AtencionSerializer, ExamenSerializer, FichaClinicaSerializer, RecetaSerializer,
 )
@@ -21,6 +22,7 @@ ADMIN_VET = (Rol.ADMINISTRADOR, Rol.VETERINARIO)
 class FichaClinicaViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """Fichas clínicas (se crean solas con la mascota). Lectura: admin, vet y tutor propio."""
 
+    queryset = FichaClinica.objects.none()  # solo para el esquema OpenAPI
     serializer_class = FichaClinicaSerializer
     permission_classes = [PorRol]
     roles_lectura = servicios.ROLES_CLINICOS
@@ -36,6 +38,7 @@ class AtencionViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.C
                       mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """Atenciones. Solo el VETERINARIO crea o corrige las suyas; no existe DELETE."""
 
+    queryset = Atencion.objects.none()  # solo para el esquema OpenAPI
     serializer_class = AtencionSerializer
     permission_classes = [PorRol]
     roles_lectura = servicios.ROLES_CLINICOS
@@ -52,6 +55,7 @@ class AtencionViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.C
 class RecetaViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
     """Recetas de las atenciones. Se agregan (VETERINARIO autor) pero no se borran."""
 
+    queryset = Receta.objects.none()  # solo para el esquema OpenAPI
     serializer_class = RecetaSerializer
     permission_classes = [PorRol]
     roles_lectura = servicios.ROLES_CLINICOS
@@ -66,6 +70,7 @@ class RecetaViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Cre
 class ExamenViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
     """Exámenes con adjunto opcional (multipart). El archivo se descarga por /archivo/."""
 
+    queryset = Examen.objects.none()  # solo para el esquema OpenAPI
     serializer_class = ExamenSerializer
     permission_classes = [PorRol]
     roles_lectura = servicios.ROLES_CLINICOS

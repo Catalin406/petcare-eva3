@@ -10,7 +10,7 @@ from core.permisos_api import STAFF, TODOS, PorRol
 from usuarios.models import Rol
 
 from . import servicios
-from .models import Vacuna
+from .models import ControlPeriodico, Recordatorio, RegistroVacuna, Vacuna
 from .serializers import (
     ControlSerializer, PanelRecordatoriosSerializer, RecordatorioSerializer, RegistroVacunaSerializer, VacunaSerializer,
 )
@@ -34,6 +34,7 @@ class VacunaViewSet(viewsets.ModelViewSet):
 class RegistroVacunaViewSet(viewsets.ModelViewSet):
     """Vacunas aplicadas; la próxima dosis se calcula sola (fecha + periodicidad)."""
 
+    queryset = RegistroVacuna.objects.none()  # solo para el esquema OpenAPI
     serializer_class = RegistroVacunaSerializer
     permission_classes = [PorRol]
     roles_lectura = TODOS
@@ -50,6 +51,7 @@ class RegistroVacunaViewSet(viewsets.ModelViewSet):
 class ControlPeriodicoViewSet(viewsets.ModelViewSet):
     """Controles periódicos. Recepción, veterinario y administrador gestionan; el tutor lee los suyos."""
 
+    queryset = ControlPeriodico.objects.none()  # solo para el esquema OpenAPI
     serializer_class = ControlSerializer
     permission_classes = [PorRol]
     roles_lectura = TODOS
@@ -73,6 +75,7 @@ class ControlPeriodicoViewSet(viewsets.ModelViewSet):
 class RecordatorioViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """Recordatorios (los crea el comando generar_recordatorios). El tutor ve solo los suyos."""
 
+    queryset = Recordatorio.objects.none()  # solo para el esquema OpenAPI
     serializer_class = RecordatorioSerializer
     permission_classes = [PorRol]
     roles_lectura = TODOS

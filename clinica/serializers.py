@@ -100,7 +100,23 @@ class ExamenLecturaSerializer(serializers.ModelSerializer):
         return reverse("examen-archivo", args=[examen.pk], request=self.context.get("request"))
 
 
+class FichaVisibleField(serializers.PrimaryKeyRelatedField):
+    """Solo fichas que el usuario puede ver (una ajena responde "no existe")."""
+
+    def get_queryset(self):
+        return servicios.fichas_visibles(self.context["request"].user)
+
+
+class CitaPropiaField(serializers.PrimaryKeyRelatedField):
+    """Solo citas del propio veterinario."""
+
+    def get_queryset(self):
+        return Cita.objects.filter(profesional__usuario=self.context["request"].user)
+
+
 class AtencionSerializer(serializers.ModelSerializer):
+    ficha = FichaVisibleField(required=False)
+    cita = CitaPropiaField(required=False, allow_null=True)
     mascota_nombre = serializers.CharField(source="ficha.mascota.nombre", read_only=True)
     veterinario_nombre = serializers.CharField(source="veterinario.nombre", read_only=True)
     recetas = RecetaAnidadaSerializer(many=True, required=False)
@@ -113,14 +129,6 @@ class AtencionSerializer(serializers.ModelSerializer):
             "peso_kg", "temperatura_c", "diagnostico", "tratamiento", "observaciones", "recetas", "examenes",
         ]
         read_only_fields = ["veterinario"]
-        extra_kwargs = {"ficha": {"required": False}}
-
-    def get_fields(self):
-        campos = super().get_fields()
-        usuario = self.context["request"].user
-        campos["ficha"].queryset = servicios.fichas_visibles(usuario)
-        campos["cita"].queryset = Cita.objects.filter(profesional__usuario=usuario)
-        return campos
 
     def create(self, datos):
         recetas = datos.pop("recetas", [])

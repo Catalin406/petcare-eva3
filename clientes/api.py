@@ -17,6 +17,7 @@ from .serializers import MascotaSerializer, TutorSerializer
 class TutorViewSet(viewsets.ModelViewSet):
     """Tutores. Staff: CRUD. Tutor: solo su propio registro (lectura)."""
 
+    queryset = Tutor.objects.none()  # solo para el esquema OpenAPI; get_queryset() filtra por usuario
     serializer_class = TutorSerializer
     permission_classes = [PorRol]
     roles_lectura = STAFF + (Rol.TUTOR,)
@@ -37,6 +38,7 @@ class TutorViewSet(viewsets.ModelViewSet):
 class MascotaViewSet(viewsets.ModelViewSet):
     """Mascotas. Staff: CRUD. Veterinario: lectura. Tutor: lectura de las suyas."""
 
+    queryset = Mascota.objects.none()  # solo para el esquema OpenAPI; get_queryset() filtra por usuario
     serializer_class = MascotaSerializer
     permission_classes = [PorRol]
     roles_lectura = TODOS

@@ -240,6 +240,57 @@ SIMPLE_JWT = {
 }
 
 # ============================================================
+# DRF-SPECTACULAR (OpenAPI 3 + Swagger UI en /api/docs/)
+# La descripción resume autenticación y roles para quien prueba la API.
+# ============================================================
+SPECTACULAR_SETTINGS = {
+    "TITLE": f"{NOMBRE_COMERCIAL} · API de citas y fichas clínicas",
+    "DESCRIPTION": f"""
+API REST de **{NOMBRE_COMERCIAL}**, sistema de gestión de citas y fichas médicas para veterinaria.
+
+**Autor:** {ALUMNO_NOMBRE} · INACAP · Desarrollo Backend · Evaluación 3
+
+### Cómo autenticarse
+1. `POST /api/auth/token/` con `username` y `password` (devuelve `access` y `refresh`).
+2. Pulsa **Authorize** y pega el valor de `access` (el prefijo Bearer lo agrega Swagger).
+3. El token dura 30 minutos; renuévalo con `POST /api/auth/token/refresh/`.
+También se acepta la sesión del navegador (la usa el calendario web).
+
+### Quién puede qué
+| Rol | Alcance |
+|---|---|
+| Administrador | Todo. |
+| Recepcionista | Tutores, mascotas y citas. **Sin acceso** a fichas, atenciones ni exámenes. |
+| Veterinario | Su agenda y disponibilidad; escribe atenciones, recetas, exámenes y vacunas. |
+| Tutor | Solo lectura de SUS mascotas, citas, fichas y recordatorios; solicita y cancela citas propias. |
+
+Un recurso de otro tutor responde **404**. Los archivos (fotos y exámenes) se descargan por las acciones `/foto/` y `/archivo/`, nunca desde una ruta pública.
+""",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "COMPONENT_SPLIT_REQUEST": True,
+    "SWAGGER_UI_SETTINGS": {"persistAuthorization": True},
+    "CONTACT": {"name": ALUMNO_NOMBRE},
+    # Varias tablas comparten listas de opciones (estado, especie): se nombran una sola vez.
+    "ENUM_NAME_OVERRIDES": {
+        "EstadoCitaEnum": "agenda.models.EstadoCita",
+        "EstadoRecordatorioEnum": "vacunacion.models.EstadoRecordatorio",
+        "TipoRecordatorioEnum": "vacunacion.models.TipoRecordatorio",
+        "CanalRecordatorioEnum": "vacunacion.models.CanalRecordatorio",
+        "EspecieEnum": "clientes.models.Especie",
+        "SexoEnum": "clientes.models.Sexo",
+        "RolEnum": "usuarios.models.Rol",
+    },
+    "TAGS": [
+        {"name": "tutores", "description": "Tutores (responsables de las mascotas)."},
+        {"name": "mascotas", "description": "Mascotas y sus fotos (privadas)."},
+        {"name": "citas", "description": "Agendamiento, estados e historial."},
+        {"name": "atenciones", "description": "Atenciones clínicas (no se eliminan)."},
+        {"name": "recordatorios", "description": "Vacunas y controles por vencer."},
+    ],
+}
+
+# ============================================================
 # PRUEBAS RÁPIDAS
 # Con "manage.py test" se usa un hash de contraseñas liviano: PBKDF2
 # es lento a propósito y multiplicaría por 10 el tiempo de las pruebas.

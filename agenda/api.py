@@ -106,6 +106,7 @@ class DisponibilidadViewSet(_AgendaPropiaViewSet):
     """Disponibilidad semanal recurrente por profesional."""
 
     modelo = DisponibilidadSemanal
+    queryset = DisponibilidadSemanal.objects.none()  # solo para el esquema OpenAPI
     serializer_class = DisponibilidadSerializer
     filterset_fields = ["profesional", "dia_semana"]
     ordering_fields = ["dia_semana", "hora_inicio"]
@@ -115,6 +116,7 @@ class BloqueoViewSet(_AgendaPropiaViewSet):
     """Bloqueos de agenda (vacaciones, feriados)."""
 
     modelo = BloqueoAgenda
+    queryset = BloqueoAgenda.objects.none()  # solo para el esquema OpenAPI
     serializer_class = BloqueoSerializer
     filterset_fields = ["profesional"]
     ordering_fields = ["inicio"]
@@ -126,6 +128,7 @@ class CitaViewSet(viewsets.ModelViewSet):
     Tutor: ve, solicita y cancela las de SUS mascotas.
     """
 
+    queryset = Cita.objects.none()  # solo para el esquema OpenAPI; get_queryset() filtra por usuario
     serializer_class = CitaSerializer
     permission_classes = [PorRol]
     roles_lectura = TODOS
