@@ -200,7 +200,7 @@ python manage.py test                      # todas las pruebas en verde
 
 28. **¿Qué hace un `ViewSet` y un router?** El `ViewSet` agrupa list/retrieve/create/update/destroy en una clase; el router genera las URLs. Los permisos por rol están en `PorRol` y el filtrado por objeto en `get_queryset()`.
 29. **¿Para qué sirve un serializer?** Convierte modelos ↔ JSON y valida la entrada. Mis serializers delegan en `servicios.py`, así la API aplica las mismas reglas que la web.
-30. **¿Cómo comprobaste que todo funciona?** 310 pruebas automatizadas: reglas, constraints reales de PostgreSQL, matriz de permisos rol × ruta (web y API), CSRF, sesión, `check --deploy`, Admin y seed. Más `makemigrations --check` y `spectacular --validate --fail-on-warn`.
+30. **¿Cómo comprobaste que todo funciona?** 312 pruebas automatizadas: reglas, constraints reales de PostgreSQL, matriz de permisos rol × ruta (web y API), CSRF, sesión, `check --deploy`, Admin y seed. Más `makemigrations --check` y `spectacular --validate --fail-on-warn`.
 
 ---
 

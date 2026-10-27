@@ -121,7 +121,7 @@ Todo lo sensible o dependiente del entorno se configura en `.env` (nunca en el c
 ## 6. Pruebas
 
 ```powershell
-python manage.py test                    # todas (310 pruebas, ~1 min)
+python manage.py test                    # todas (312 pruebas, ~1 min)
 python manage.py test agenda             # una app
 python manage.py check
 python manage.py check --deploy          # con las variables de producción (ver deploy/env.produccion.ejemplo)
