@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo_pagina }}{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <h1 class="h2 mb-0">{{ titulo_pagina }}</h1>
+    <a href="{{ url_volver }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Volver</a>
+</div>
+<form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% if cita %}<input type="hidden" name="cita" value="{{ cita.pk }}">
+    <div class="alert alert-info"><i class="bi bi-calendar-check"></i> Atiendes la cita del {{ cita.inicio|date:"d/m/Y H:i" }}. Al guardar, la cita quedará como <strong>Atendida</strong>.</div>{% endif %}
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header"><i class="bi bi-clipboard2-pulse"></i> Consulta</div>
+        <div class="card-body">{% include "parciales/formulario_cuerpo.html" %}</div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header"><i class="bi bi-capsule"></i> Recetas <span class="small text-suave fw-normal">(llena solo las que necesites)</span></div>
+        <div class="card-body">
+            {{ recetas.management_form }}
+            {% for f in recetas.forms %}
+            <div class="border rounded p-3 mb-3">
+                {% include "parciales/formulario_cuerpo.html" with form=f %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header"><i class="bi bi-file-earmark-medical"></i> Exámenes <span class="small text-suave fw-normal">(PDF, JPG o PNG de hasta 5 MB)</span></div>
+        <div class="card-body">
+            {{ examenes.management_form }}
+            {% for f in examenes.forms %}
+            <div class="border rounded p-3 mb-3">
+                {% include "parciales/formulario_cuerpo.html" with form=f %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary"><i class="bi bi-check2-circle"></i> Guardar atención</button>
+    <a href="{{ url_volver }}" class="btn btn-outline-secondary">Cancelar</a>
+</form>
+{% endblock %}

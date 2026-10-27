@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block titulo %}Atención de {{ mascota.nombre }}{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">Atención de {{ mascota.nombre }}</h1>
+        <p class="text-suave mb-0">{{ atencion.fecha|date:"d/m/Y H:i" }} · {{ atencion.veterinario.nombre }}{% if not atencion.cita_id %} · urgencia sin cita{% endif %}</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'ficha_detalle' mascota.pk %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Ficha</a>
+        {% if atencion.cita_id %}<a href="{% url 'cita_detalle' atencion.cita_id %}" class="btn btn-outline-secondary"><i class="bi bi-calendar-check"></i> Cita</a>{% endif %}
+        {% if puede_editar %}<a href="{% url 'atencion_editar' atencion.pk %}" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> Corregir / agregar</a>{% endif %}
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header"><i class="bi bi-clipboard2-pulse"></i> Consulta</div>
+            <div class="card-body">
+                <dl class="mb-0">
+                    <dt>Anamnesis</dt><dd>{{ atencion.anamnesis|linebreaksbr }}</dd>
+                    <dt>Diagnóstico</dt><dd>{{ atencion.diagnostico|linebreaksbr }}</dd>
+                    <dt>Tratamiento</dt><dd>{{ atencion.tratamiento|default:"—"|linebreaksbr }}</dd>
+                    <dt>Observaciones</dt><dd>{{ atencion.observaciones|default:"—"|linebreaksbr }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header"><i class="bi bi-activity"></i> Signos</div>
+            <div class="card-body">
+                <p class="mb-1"><strong>Peso:</strong> {% if atencion.peso_kg %}{{ atencion.peso_kg }} kg{% else %}—{% endif %}</p>
+                <p class="mb-0"><strong>Temperatura:</strong> {% if atencion.temperatura_c %}{{ atencion.temperatura_c }} °C{% else %}—{% endif %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header"><i class="bi bi-capsule"></i> Recetas</div>
+            <ul class="list-group list-group-flush">
+            {% for r in atencion.recetas.all %}
+                <li class="list-group-item"><strong>{{ r.medicamento }}</strong> · {{ r.dosis }}<br>
+                    <span class="small text-suave">{{ r.frecuencia }} durante {{ r.duracion }}</span>
+                    {% if r.indicaciones %}<div class="small">{{ r.indicaciones }}</div>{% endif %}</li>
+            {% empty %}<li class="list-group-item text-suave">Sin recetas.</li>{% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header"><i class="bi bi-file-earmark-medical"></i> Exámenes</div>
+            <ul class="list-group list-group-flush">
+            {% for x in atencion.examenes.all %}
+                <li class="list-group-item"><strong>{{ x.tipo }}</strong> · {{ x.fecha|date:"d/m/Y" }}
+                    {% if x.resultado %}<div class="small">{{ x.resultado }}</div>{% endif %}
+                    {% if x.archivo %}<a class="btn btn-sm btn-outline-primary mt-1" href="{% url 'examen_archivo' x.pk %}" target="_blank" rel="noopener"><i class="bi bi-paperclip"></i> Ver adjunto</a>
+                    <a class="btn btn-sm btn-outline-secondary mt-1" href="{% url 'examen_archivo' x.pk %}?descargar=1"><i class="bi bi-download"></i></a>{% endif %}</li>
+            {% empty %}<li class="list-group-item text-suave">Sin exámenes.</li>{% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
