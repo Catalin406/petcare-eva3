@@ -1,1 +1,41 @@
-{# Citas próximas, vacunas y recordatorios de la mascota: se completan en las fases siguientes. #}
+{# Citas próximas, vacunas y recordatorios de la mascota (cada lista ya viene filtrada por permisos). #}
+<div class="card shadow-sm mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-calendar-check"></i> Próximas citas</span>
+        {% if puede_pedir_cita %}<a href="{% url 'cita_crear' %}?mascota={{ mascota.pk }}" class="btn btn-sm btn-primary">Pedir cita</a>{% endif %}
+    </div>
+    <ul class="list-group list-group-flush">
+    {% for cita in citas_proximas %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a href="{% url 'cita_detalle' cita.pk %}" class="fw-bold">{{ cita.inicio|date:"d/m/Y H:i" }}</a>
+            <span class="text-suave">{{ cita.motivo }} · {{ cita.profesional.nombre }}</span>
+            <span class="badge-suave badge-cita-{{ cita.estado|lower }}">{{ cita.get_estado_display }}</span>
+        </li>
+    {% empty %}<li class="list-group-item text-suave">Sin citas próximas.</li>{% endfor %}
+    </ul>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header"><i class="bi bi-shield-check"></i> Vacunas</div>
+    <ul class="list-group list-group-flush">
+    {% for v in vacunas_aplicadas %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <strong>{{ v.vacuna.nombre }}</strong>
+            <span class="text-suave">aplicada {{ v.fecha_aplicacion|date:"d/m/Y" }}</span>
+            <span>próxima: {{ v.proxima_dosis|date:"d/m/Y" }}</span>
+        </li>
+    {% empty %}<li class="list-group-item text-suave">Sin vacunas registradas.</li>{% endfor %}
+    </ul>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header"><i class="bi bi-bell"></i> Recordatorios pendientes</div>
+    <ul class="list-group list-group-flush">
+    {% for r in recordatorios_mascota %}
+        <li class="list-group-item d-flex justify-content-between align-items-center {% if r.dias_restantes < 0 %}urgencia-vencido{% elif r.dias_restantes <= 7 %}urgencia-semana{% else %}urgencia-mes{% endif %}">
+            <span><strong>{{ r.descripcion }}</strong> · {{ r.fecha_objetivo|date:"d/m/Y" }}</span>
+            <span class="badge-suave badge-rec-{{ r.estado|lower }}">{{ r.get_estado_display }}</span>
+        </li>
+    {% empty %}<li class="list-group-item text-suave">Nada pendiente.</li>{% endfor %}
+    </ul>
+</div>

@@ -1,16 +1,72 @@
-{# Navbar provisoria: en la fase de interfaz se completa el menú por rol. #}
-<nav class="navbar navbar-expand-lg navbar-academia">
+{% comment %} ============================================================
+   NAVBAR SEGÚN EL ROL
+   Cada rol ve solo los accesos que le corresponden. El servidor
+   vuelve a verificar el permiso en cada vista: ocultar un enlace NO
+   es seguridad, es comodidad.
+   ============================================================ {% endcomment %}
+{% with actual=request.resolver_match.url_name %}
+<nav class="navbar navbar-expand-lg navbar-petcare">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'inicio' %}"><i class="bi bi-heart-pulse-fill"></i> {{ NOMBRE_COMERCIAL }}</a>
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'inicio' %}">
+            <span class="marca-icono"><i class="bi bi-heart-pulse-fill"></i></span> {{ NOMBRE_COMERCIAL }}
+        </a>
         {% if user.is_authenticated %}
-        <div class="ms-auto d-flex align-items-center gap-2">
-            <span class="small text-secondary">{{ user.nombre_visible }} · {{ user.get_rol_display }}</span>
-            {# El cierre de sesión es POST con CSRF: un enlace no puede cerrar la sesión. #}
-            <form method="post" action="{% url 'logout' %}" class="m-0">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="bi bi-box-arrow-right"></i> Salir</button>
-            </form>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu-principal" aria-controls="menu-principal" aria-expanded="false" aria-label="Abrir menú">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu-principal">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-1">
+                <li class="nav-item"><a class="nav-link {% if actual == 'inicio' %}active{% endif %}" href="{% url 'inicio' %}"><i class="bi bi-house-heart"></i> Inicio</a></li>
+
+                {% if user.es_tutor %}
+                <li class="nav-item"><a class="nav-link {% if 'mascota' in actual %}active{% endif %}" href="{% url 'mascota_lista' %}"><i class="bi bi-heart"></i> Mis mascotas</a></li>
+                <li class="nav-item"><a class="nav-link {% if 'cita' in actual %}active{% endif %}" href="{% url 'cita_lista' %}"><i class="bi bi-calendar-check"></i> Mis citas</a></li>
+                <li class="nav-item"><a class="nav-link {% if actual == 'calendario' %}active{% endif %}" href="{% url 'calendario' %}"><i class="bi bi-calendar3"></i> Pedir hora</a></li>
+                <li class="nav-item"><a class="nav-link {% if actual == 'recordatorio_panel' %}active{% endif %}" href="{% url 'recordatorio_panel' %}"><i class="bi bi-bell"></i> Recordatorios</a></li>
+                {% endif %}
+
+                {% if user.es_recepcionista or user.es_administrador %}
+                <li class="nav-item"><a class="nav-link {% if actual == 'calendario' %}active{% endif %}" href="{% url 'calendario' %}"><i class="bi bi-calendar3"></i> Calendario</a></li>
+                <li class="nav-item"><a class="nav-link {% if 'cita' in actual %}active{% endif %}" href="{% url 'cita_lista' %}"><i class="bi bi-calendar-check"></i> Citas</a></li>
+                <li class="nav-item"><a class="nav-link {% if 'tutor' in actual %}active{% endif %}" href="{% url 'tutor_lista' %}"><i class="bi bi-people"></i> Tutores</a></li>
+                <li class="nav-item"><a class="nav-link {% if 'mascota' in actual %}active{% endif %}" href="{% url 'mascota_lista' %}"><i class="bi bi-heart"></i> Mascotas</a></li>
+                {% endif %}
+
+                {% if user.es_veterinario %}
+                <li class="nav-item"><a class="nav-link {% if 'cita' in actual %}active{% endif %}" href="{% url 'cita_lista' %}"><i class="bi bi-calendar-check"></i> Mi agenda</a></li>
+                <li class="nav-item"><a class="nav-link {% if actual == 'calendario' %}active{% endif %}" href="{% url 'calendario' %}"><i class="bi bi-calendar3"></i> Calendario</a></li>
+                <li class="nav-item"><a class="nav-link {% if 'mascota' in actual %}active{% endif %}" href="{% url 'mascota_lista' %}"><i class="bi bi-heart"></i> Pacientes</a></li>
+                <li class="nav-item"><a class="nav-link {% if 'disponibilidad' in actual or 'bloqueo' in actual %}active{% endif %}" href="{% url 'disponibilidad_lista' %}"><i class="bi bi-clock"></i> Disponibilidad</a></li>
+                {% endif %}
+
+                {% if not user.es_tutor %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if 'vacuna' in actual or 'control' in actual or actual == 'recordatorio_panel' %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-shield-check"></i> Vacunas</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'recordatorio_panel' %}"><i class="bi bi-bell"></i> Recordatorios</a></li>
+                        <li><a class="dropdown-item" href="{% url 'registro_vacuna_lista' %}"><i class="bi bi-shield-check"></i> Vacunas aplicadas</a></li>
+                        <li><a class="dropdown-item" href="{% url 'control_lista' %}"><i class="bi bi-calendar-check"></i> Controles periódicos</a></li>
+                        <li><a class="dropdown-item" href="{% url 'vacuna_lista' %}"><i class="bi bi-list-ul"></i> Catálogo de vacunas</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+
+                {% if user.es_administrador %}
+                <li class="nav-item"><a class="nav-link {% if 'disponibilidad' in actual %}active{% endif %}" href="{% url 'disponibilidad_lista' %}"><i class="bi bi-clock"></i> Disponibilidad</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}"><i class="bi bi-gear"></i> Administración</a></li>
+                {% endif %}
+            </ul>
+            <div class="d-flex align-items-center gap-2">
+                <a class="btn btn-sm btn-outline-secondary" href="{% url 'swagger' %}" target="_blank" rel="noopener" title="Documentación de la API"><i class="bi bi-braces"></i></a>
+                <span class="small text-suave d-none d-xl-inline">{{ user.nombre_visible }} · {{ user.get_rol_display }}</span>
+                {# El cierre de sesión es POST con CSRF: un enlace no puede cerrar la sesión de nadie. #}
+                <form method="post" action="{% url 'logout' %}" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-box-arrow-right"></i> Salir</button>
+                </form>
+            </div>
         </div>
         {% endif %}
     </div>
 </nav>
+{% endwith %}
