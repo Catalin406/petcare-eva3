@@ -12,4 +12,5 @@ def datos_alumno(request):
         "ALUMNO_SECCION": settings.ALUMNO_SECCION,
         "ALUMNO_ANIO": settings.ALUMNO_ANIO,
         "NOMBRE_COMERCIAL": settings.NOMBRE_COMERCIAL,
+        "ANTICIPACION_HORAS": settings.CITA_ANTICIPACION_MIN_HORAS,
     }

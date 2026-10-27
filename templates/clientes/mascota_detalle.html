@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block titulo %}{{ mascota.nombre }}{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">{{ mascota.nombre }}
+            {% if mascota.activa %}<span class="badge-suave badge-activo fs-6">Activa</span>{% else %}<span class="badge-suave badge-inactivo fs-6">Inactiva</span>{% endif %}
+        </h1>
+        <p class="text-suave mb-0">{{ mascota.get_especie_display }}{% if mascota.raza %} · {{ mascota.raza }}{% endif %} · {{ mascota.edad_texto }}</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'mascota_lista' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Mascotas</a>
+        {% if puede_ver_ficha %}<a href="{% url 'ficha_detalle' mascota.pk %}" class="btn btn-acento"><i class="bi bi-journal-medical"></i> Ficha clínica</a>{% endif %}
+        {% if puede_pedir_cita %}<a href="{% url 'cita_crear' %}?mascota={{ mascota.pk }}" class="btn btn-primary"><i class="bi bi-calendar-plus"></i> Pedir cita</a>{% endif %}
+        {% if puede_editar %}
+        <a href="{% url 'mascota_editar' mascota.pk %}" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> Editar</a>
+        <a href="{% url 'mascota_eliminar' mascota.pk %}" class="btn btn-peligro"><i class="bi bi-trash"></i></a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                {% if mascota.foto %}<img class="foto-mascota mb-3" src="{% url 'mascota_foto' mascota.pk %}" alt="Foto de {{ mascota.nombre }}">
+                {% else %}<div class="icono-modulo mx-auto mb-3" style="width:6rem;height:6rem;font-size:3rem"><i class="bi bi-paw"></i></div>{% endif %}
+                <dl class="text-start mb-0">
+                    <dt>Sexo</dt><dd>{{ mascota.get_sexo_display }}</dd>
+                    <dt>Nacimiento</dt><dd>{{ mascota.fecha_nacimiento|date:"d/m/Y" }}</dd>
+                    <dt>Peso</dt><dd>{% if mascota.peso %}{{ mascota.peso }} kg{% else %}—{% endif %}</dd>
+                    <dt>Color / señas</dt><dd>{{ mascota.color_senas|default:"—" }}</dd>
+                    <dt>Microchip</dt><dd>{{ mascota.microchip|default:"—" }}</dd>
+                    <dt>Tutor</dt>
+                    <dd>{% if puede_ver_tutor %}<a href="{% url 'tutor_detalle' mascota.tutor.pk %}">{{ mascota.tutor.nombre_completo }}</a>{% else %}{{ mascota.tutor.nombre_completo }}{% endif %}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        {% include "clientes/parciales/mascota_secciones.html" %}
+    </div>
+</div>
+{% endblock %}

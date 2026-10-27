@@ -29,3 +29,31 @@ class PaginacionConFiltrosMixin:
         parametros.pop("page", None)
         contexto["consulta_sin_pagina"] = parametros.urlencode() + "&" if parametros else ""
         return contexto
+
+
+class FormularioSimpleMixin:
+    """
+    Alta/edición con la plantilla genérica crud/formulario.html.
+    La vista define: titulo, mensaje_exito, nombre_url_volver (y get_success_url).
+    """
+
+    template_name = "crud/formulario.html"
+    titulo = ""
+    mensaje_exito = "Los cambios se guardaron."
+    nombre_url_volver = None
+
+    def get_context_data(self, **kwargs):
+        from django.urls import reverse
+
+        contexto = super().get_context_data(**kwargs)
+        contexto["titulo_pagina"] = self.titulo
+        if self.nombre_url_volver:
+            contexto["url_volver"] = reverse(self.nombre_url_volver)
+        return contexto
+
+    def form_valid(self, form):
+        from django.contrib import messages
+
+        respuesta = super().form_valid(form)
+        messages.success(self.request, self.mensaje_exito)
+        return respuesta

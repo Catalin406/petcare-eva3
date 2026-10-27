@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block titulo %}Mascotas{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1"><i class="bi bi-heart"></i> {% if user.es_tutor %}Mis mascotas{% else %}Mascotas{% endif %}</h1>
+        <p class="text-suave mb-0">{% if user.es_tutor %}Aquí ves solo tus mascotas.{% else %}Pacientes registrados en la clínica.{% endif %}</p>
+    </div>
+    {% if user.es_administrador or user.es_recepcionista %}
+    <a href="{% url 'mascota_crear' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Nueva mascota</a>
+    {% endif %}
+</div>
+
+<form method="get" class="panel-filtros p-3 mb-3 row g-2 align-items-end">
+    <div class="col-md-5">
+        <label class="form-label" for="q">Buscar</label>
+        <input type="search" id="q" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Nombre, raza, microchip{% if not user.es_tutor %} o tutor{% endif %}">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label" for="especie">Especie</label>
+        <select id="especie" name="especie" class="form-select">
+            <option value="">Todas</option>
+            {% for valor, etiqueta in especies %}<option value="{{ valor }}" {% if request.GET.especie == valor %}selected{% endif %}>{{ etiqueta }}</option>{% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="form-label" for="estado">Estado</label>
+        <select id="estado" name="estado" class="form-select">
+            <option value="">Todas</option>
+            <option value="activas" {% if request.GET.estado == "activas" %}selected{% endif %}>Activas</option>
+            <option value="inactivas" {% if request.GET.estado == "inactivas" %}selected{% endif %}>Inactivas</option>
+        </select>
+    </div>
+    <div class="col-md-2 d-grid"><button class="btn btn-outline-primary"><i class="bi bi-search"></i> Filtrar</button></div>
+</form>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr><th></th><th>Nombre</th><th>Especie</th><th>Edad</th>{% if not user.es_tutor %}<th>Tutor</th>{% endif %}<th>Estado</th></tr></thead>
+            <tbody>
+            {% for mascota in mascotas %}
+                <tr>
+                    <td>{% if mascota.foto %}<img class="foto-mascota-sm" src="{% url 'mascota_foto' mascota.pk %}" alt="Foto de {{ mascota.nombre }}">{% else %}<span class="icono-mascota-sm"><i class="bi bi-paw"></i></span>{% endif %}</td>
+                    <td><a href="{% url 'mascota_detalle' mascota.pk %}" class="fw-bold">{{ mascota.nombre }}</a></td>
+                    <td>{{ mascota.get_especie_display }}{% if mascota.raza %} · {{ mascota.raza }}{% endif %}</td>
+                    <td>{{ mascota.edad_texto }}</td>
+                    {% if not user.es_tutor %}<td>{{ mascota.tutor.nombre_completo }}</td>{% endif %}
+                    <td>{% if mascota.activa %}<span class="badge-suave badge-activo">Activa</span>{% else %}<span class="badge-suave badge-inactivo">Inactiva</span>{% endif %}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="6"><div class="estado-vacio"><i class="bi bi-heart"></i><p class="mb-0">No hay mascotas que coincidan.</p></div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% include "parciales/paginacion.html" %}
+{% endblock %}

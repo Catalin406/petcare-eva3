@@ -38,3 +38,12 @@ class FormularioBase(EstiloBootstrapMixin, forms.Form):
 
 class FormularioModeloBase(EstiloBootstrapMixin, forms.ModelForm):
     pass
+
+
+def volcar_errores(formulario, error):
+    """Pasa un ValidationError lanzado por un servicio a los campos del formulario."""
+    if hasattr(error, "error_dict"):
+        for campo, errores in error.message_dict.items():
+            formulario.add_error(campo if campo in formulario.fields else None, errores)
+    else:
+        formulario.add_error(None, error.messages)

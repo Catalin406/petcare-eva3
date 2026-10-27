@@ -69,3 +69,11 @@ class ValidadorArchivo:
 
 validar_adjunto_examen = ValidadorArchivo(["pdf", "jpg", "jpeg", "png"])
 validar_foto = ValidadorArchivo(["jpg", "jpeg", "png", "webp"])
+
+
+def validar_no_futura(fecha):
+    """La fecha de nacimiento (u otra fecha histórica) no puede ser futura."""
+    from django.utils import timezone
+
+    if fecha and fecha > timezone.localdate():
+        raise ValidationError("La fecha no puede ser futura.")

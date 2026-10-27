@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block titulo %}{{ tutor.nombre_completo }}{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">{{ tutor.nombre_completo }}</h1>
+        <p class="text-suave mb-0">RUT {{ tutor.rut }}</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'tutor_lista' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Tutores</a>
+        <a href="{% url 'tutor_editar' tutor.pk %}" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> Editar</a>
+        <a href="{% url 'tutor_eliminar' tutor.pk %}" class="btn btn-peligro"><i class="bi bi-trash"></i> Eliminar / desactivar</a>
+    </div>
+</div>
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header"><i class="bi bi-person-vcard"></i> Datos de contacto</div>
+            <div class="card-body">
+                <p class="mb-1"><i class="bi bi-envelope"></i> {{ tutor.email }}</p>
+                <p class="mb-1"><i class="bi bi-telephone"></i> {{ tutor.telefono }}</p>
+                <p class="mb-1"><i class="bi bi-geo-alt"></i> {{ tutor.direccion }}</p>
+                <p class="mb-0"><i class="bi bi-person-badge"></i> Usuario: {{ tutor.usuario.username }}
+                    {% if not tutor.usuario.is_active %}<span class="badge-suave badge-inactivo">Desactivada</span>{% endif %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-heart"></i> Mascotas</span>
+                <a href="{% url 'mascota_crear' %}?tutor={{ tutor.pk }}" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg"></i> Agregar</a>
+            </div>
+            <ul class="list-group list-group-flush">
+            {% for mascota in tutor.mascotas.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{% url 'mascota_detalle' mascota.pk %}" class="fw-bold">{{ mascota.nombre }}</a>
+                    <span class="text-suave">{{ mascota.get_especie_display }} · {{ mascota.edad_texto }}</span>
+                    {% if mascota.activa %}<span class="badge-suave badge-activo">Activa</span>{% else %}<span class="badge-suave badge-inactivo">Inactiva</span>{% endif %}
+                </li>
+            {% empty %}
+                <li class="list-group-item estado-vacio">Sin mascotas registradas.</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

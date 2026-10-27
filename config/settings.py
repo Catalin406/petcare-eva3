@@ -96,6 +96,10 @@ INSTALLED_APPS = [
     # Propias (se suman por fase)
     "core",
     "usuarios.apps.UsuariosConfig",
+    "clientes.apps.ClientesConfig",
+    "agenda.apps.AgendaConfig",
+    "clinica.apps.ClinicaConfig",
+    "vacunacion.apps.VacunacionConfig",
 ]
 
 MIDDLEWARE = [
@@ -234,3 +238,14 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
     "TOKEN_OBTAIN_SERIALIZER": "usuarios.tokens.TokenConRolSerializer",
 }
+
+# ============================================================
+# PRUEBAS RÁPIDAS
+# Con "manage.py test" se usa un hash de contraseñas liviano: PBKDF2
+# es lento a propósito y multiplicaría por 10 el tiempo de las pruebas.
+# Solo se activa al correr tests: en uso normal rige el hasher seguro de Django.
+# ============================================================
+import sys  # noqa: E402
+
+if "test" in sys.argv[:2]:
+    PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
