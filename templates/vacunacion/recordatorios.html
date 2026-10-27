@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block titulo %}Recordatorios{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1"><i class="bi bi-bell"></i> {% if user.es_tutor %}Mis recordatorios{% else %}Recordatorios{% endif %}</h1>
+        <p class="text-suave mb-0">Vacunas y controles pendientes, ordenados por urgencia.</p>
+    </div>
+    {% if not user.es_tutor %}<a href="{% url 'registro_vacuna_lista' %}" class="btn btn-outline-secondary"><i class="bi bi-shield-check"></i> Vacunas aplicadas</a>{% endif %}
+</div>
+
+<div class="row g-4">
+    {% include "vacunacion/parciales/seccion_recordatorios.html" with titulo="Vencidos" icono="bi-exclamation-octagon" clase="urgencia-vencido" lista=vencidos vacio="Nada vencido. ¡Todo al día!" %}
+    {% include "vacunacion/parciales/seccion_recordatorios.html" with titulo="Próximos 7 días" icono="bi-alarm" clase="urgencia-semana" lista=semana vacio="Nada para esta semana." %}
+    {% include "vacunacion/parciales/seccion_recordatorios.html" with titulo="Próximos 30 días" icono="bi-calendar-event" clase="urgencia-mes" lista=mes vacio="Nada para este mes." %}
+</div>
+{% endblock %}

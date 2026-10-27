@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}Vacunas aplicadas{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1"><i class="bi bi-shield-check"></i> Vacunas aplicadas</h1>
+        <p class="text-suave mb-0">Ordenadas por la próxima dosis más cercana.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'vacuna_lista' %}" class="btn btn-outline-secondary"><i class="bi bi-list-ul"></i> Catálogo</a>
+        {% if puede_registrar %}<a href="{% url 'registro_vacuna_crear' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Registrar vacuna</a>{% endif %}
+    </div>
+</div>
+<form method="get" class="panel-filtros p-3 mb-3 row g-2 align-items-end">
+    <div class="col-md-10"><label class="form-label" for="q">Buscar</label><input type="search" id="q" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Mascota o vacuna"></div>
+    <div class="col-md-2 d-grid"><button class="btn btn-outline-primary"><i class="bi bi-search"></i> Buscar</button></div>
+</form>
+<div class="card shadow-sm"><div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead><tr><th>Mascota</th><th>Vacuna</th><th>Aplicada</th><th>Lote</th><th>Próxima dosis</th></tr></thead>
+        <tbody>
+        {% for r in registros %}
+            <tr>
+                <td><a href="{% url 'mascota_detalle' r.mascota.pk %}" class="fw-bold">{{ r.mascota.nombre }}</a></td>
+                <td>{{ r.vacuna.nombre }}</td><td>{{ r.fecha_aplicacion|date:"d/m/Y" }}</td><td>{{ r.lote|default:"—" }}</td>
+                <td>{{ r.proxima_dosis|date:"d/m/Y" }}</td>
+            </tr>
+        {% empty %}<tr><td colspan="5"><div class="estado-vacio"><i class="bi bi-shield"></i><p class="mb-0">Sin vacunas registradas.</p></div></td></tr>{% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% include "parciales/paginacion.html" %}
+{% endblock %}
