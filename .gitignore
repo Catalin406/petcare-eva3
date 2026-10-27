@@ -1,0 +1,22 @@
+# Entorno virtual
+.venv/
+venv/
+
+# Variables de entorno (contienen secretos)
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Archivos generados y datos privados (fichas clínicas: nunca al repositorio)
+staticfiles/
+archivos_privados/
+.coverage
+htmlcov/
+
+# Editores y sistema
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

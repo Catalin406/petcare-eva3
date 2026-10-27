@@ -1,0 +1,558 @@
+/* ============================================================
+   STATIC/CSS/TEMA.CSS / PALETA Y ESTILO VISUAL DEL SITIO
+   Única fuente de colores del proyecto: rosado pastel (principal),
+   café claro pastel (secundario), café pastel más oscuro (acento)
+   y fondo rosado muy claro. Sobrescribe las variables de Bootstrap,
+   así que cambiar la paleta solo requiere editar este archivo.
+   Estilo: moderno, minimalista y amigable.
+   ============================================================ */
+
+/* ============================================================
+   VARIABLES DE LA PALETA
+   ============================================================ */
+:root {
+    --color-principal: #f4a7b9;
+    --color-principal-suave: #fbd3dd;
+    --color-principal-oscuro: #c9627d;
+    --color-secundario: #dcc6ad;
+    --color-secundario-suave: #f1e6d9;
+    --color-acento: #b08968;
+    --color-acento-oscuro: #7f5c42;
+    --color-fondo: #fff4f7;
+    --color-superficie: #ffffff;
+    --color-texto: #4a3b36;
+    --color-texto-suave: #7a6660;
+    --color-borde: #f0d9df;
+    --color-sombra: rgba(176, 137, 104, 0.14);
+
+    /* Estados de matrícula */
+    --estado-pendiente-fondo: #fdecc8;
+    --estado-pendiente-texto: #7a5500;
+    --estado-pagado-fondo: #d4eed9;
+    --estado-pagado-texto: #25603a;
+    --estado-completado-fondo: #d6e4f5;
+    --estado-completado-texto: #28496f;
+    --estado-cancelado-fondo: #f6d0d0;
+    --estado-cancelado-texto: #8a2e2e;
+
+    /* Tipos y modalidades */
+    --tipo-curso-fondo: var(--color-secundario-suave);
+    --tipo-curso-texto: var(--color-acento-oscuro);
+    --tipo-bootcamp-fondo: var(--color-principal-suave);
+    --tipo-bootcamp-texto: #8e3651;
+    --tipo-taller-fondo: #e6def4;
+    --tipo-taller-texto: #4f3d7a;
+    --modalidad-fondo: #ffffff;
+    --modalidad-texto: var(--color-texto-suave);
+
+    /* Cupos */
+    --cupos-ok: #8cc9a0;
+    --cupos-medio: #f2c46d;
+    --cupos-agotado: #e38b8b;
+
+    /* Tipografía y forma */
+    --fuente-base: "Nunito", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    --radio: 1rem;
+    --radio-sm: 0.6rem;
+
+    /* ---------- Variables de Bootstrap 5.3 ---------- */
+    --bs-primary: var(--color-principal);
+    --bs-primary-rgb: 244, 167, 185;
+    --bs-secondary: var(--color-secundario);
+    --bs-secondary-rgb: 220, 198, 173;
+    --bs-body-bg: var(--color-fondo);
+    --bs-body-color: var(--color-texto);
+    --bs-body-font-family: var(--fuente-base);
+    --bs-link-color: var(--color-principal-oscuro);
+    --bs-link-color-rgb: 201, 98, 125;
+    --bs-link-hover-color: var(--color-acento-oscuro);
+    --bs-link-hover-color-rgb: 127, 92, 66;
+    --bs-border-color: var(--color-borde);
+    --bs-border-radius: var(--radio-sm);
+    --bs-border-radius-lg: var(--radio);
+    --bs-emphasis-color: var(--color-texto);
+    --bs-secondary-color: var(--color-texto-suave);
+    --bs-focus-ring-color: rgba(244, 167, 185, 0.45);
+    --bs-form-invalid-color: var(--estado-cancelado-texto);
+    --bs-form-invalid-border-color: var(--estado-cancelado-texto);
+    --bs-form-valid-color: var(--estado-pagado-texto);
+    --bs-form-valid-border-color: var(--estado-pagado-texto);
+}
+
+/* ============================================================
+   LISTAS, MENÚS Y MODALES (variables propias de Bootstrap)
+   ============================================================ */
+.list-group {
+    --bs-list-group-bg: var(--color-superficie);
+    --bs-list-group-color: var(--color-texto);
+    --bs-list-group-border-color: var(--color-borde);
+    --bs-list-group-action-color: var(--color-texto);
+    --bs-list-group-action-hover-color: var(--color-texto);
+    --bs-list-group-action-hover-bg: var(--color-fondo);
+    --bs-list-group-action-active-bg: var(--color-principal-suave);
+    --bs-list-group-active-bg: var(--color-principal-suave);
+    --bs-list-group-active-border-color: var(--color-principal);
+    --bs-list-group-active-color: var(--color-texto);
+}
+.dropdown-menu {
+    --bs-dropdown-link-active-bg: var(--color-principal-suave);
+    --bs-dropdown-link-active-color: var(--color-texto);
+    --bs-dropdown-link-hover-bg: var(--color-fondo);
+}
+.modal {
+    --bs-modal-bg: var(--color-superficie);
+    --bs-modal-border-radius: var(--radio);
+    --bs-modal-header-border-color: var(--color-borde);
+    --bs-modal-footer-border-color: var(--color-borde);
+}
+.progress { --bs-progress-bg: var(--color-secundario-suave); }
+
+/* ============================================================
+   BASE
+   ============================================================ */
+body {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--fuente-base);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--color-texto);
+    font-weight: 800;
+}
+
+a { text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.text-suave { color: var(--color-texto-suave) !important; }
+.text-acento { color: var(--color-acento-oscuro) !important; }
+.text-principal { color: var(--color-principal-oscuro) !important; }
+.bg-superficie { background-color: var(--color-superficie) !important; }
+.bg-principal-suave { background-color: var(--color-principal-suave) !important; }
+.bg-secundario-suave { background-color: var(--color-secundario-suave) !important; }
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.navbar-academia {
+    background-color: var(--color-superficie);
+    border-bottom: 3px solid var(--color-principal);
+    box-shadow: 0 2px 12px var(--color-sombra);
+}
+.navbar-academia .navbar-brand {
+    color: var(--color-texto);
+    font-weight: 800;
+}
+.navbar-academia .navbar-brand .marca-icono {
+    background: var(--color-principal);
+    color: var(--color-texto);
+    border-radius: 50%;
+    width: 2.3rem;
+    height: 2.3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.navbar-academia .nav-link {
+    color: var(--color-texto-suave);
+    font-weight: 700;
+    border-radius: var(--radio-sm);
+    padding-inline: 0.8rem !important;
+}
+.navbar-academia .nav-link:hover,
+.navbar-academia .nav-link.active {
+    color: var(--color-texto);
+    background-color: var(--color-principal-suave);
+    text-decoration: none;
+}
+.navbar-academia .dropdown-menu {
+    border-color: var(--color-borde);
+    border-radius: var(--radio-sm);
+    box-shadow: 0 8px 24px var(--color-sombra);
+}
+.navbar-academia .dropdown-item:active,
+.navbar-academia .dropdown-item.active {
+    background-color: var(--color-principal-suave);
+    color: var(--color-texto);
+}
+
+/* ============================================================
+   MIGAS DE PAN Y ENCABEZADO
+   ============================================================ */
+.breadcrumb {
+    --bs-breadcrumb-divider-color: var(--color-acento);
+    --bs-breadcrumb-item-active-color: var(--color-texto-suave);
+    font-size: 0.9rem;
+}
+.encabezado-pagina h1 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
+.encabezado-pagina .subtitulo { color: var(--color-texto-suave); }
+
+/* ============================================================
+   BOTONES
+   ============================================================ */
+.btn { font-weight: 700; border-radius: 999px; padding-inline: 1.1rem; }
+.btn-sm { padding-inline: 0.8rem; }
+.btn-primary {
+    --bs-btn-bg: var(--color-principal);
+    --bs-btn-border-color: var(--color-principal);
+    --bs-btn-color: var(--color-texto);
+    --bs-btn-hover-bg: var(--color-principal-oscuro);
+    --bs-btn-hover-border-color: var(--color-principal-oscuro);
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-active-bg: var(--color-principal-oscuro);
+    --bs-btn-active-border-color: var(--color-principal-oscuro);
+    --bs-btn-active-color: #ffffff;
+    --bs-btn-disabled-bg: var(--color-principal-suave);
+    --bs-btn-disabled-border-color: var(--color-principal-suave);
+    --bs-btn-disabled-color: var(--color-texto-suave);
+    --bs-btn-focus-shadow-rgb: 244, 167, 185;
+}
+.btn-secondary {
+    --bs-btn-bg: var(--color-secundario);
+    --bs-btn-border-color: var(--color-secundario);
+    --bs-btn-color: var(--color-texto);
+    --bs-btn-hover-bg: var(--color-acento);
+    --bs-btn-hover-border-color: var(--color-acento);
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-active-bg: var(--color-acento-oscuro);
+    --bs-btn-active-border-color: var(--color-acento-oscuro);
+    --bs-btn-active-color: #ffffff;
+}
+.btn-acento {
+    --bs-btn-bg: var(--color-acento);
+    --bs-btn-border-color: var(--color-acento);
+    --bs-btn-color: #ffffff;
+    --bs-btn-hover-bg: var(--color-acento-oscuro);
+    --bs-btn-hover-border-color: var(--color-acento-oscuro);
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-active-bg: var(--color-acento-oscuro);
+    --bs-btn-active-border-color: var(--color-acento-oscuro);
+    --bs-btn-active-color: #ffffff;
+}
+.btn-outline-primary {
+    --bs-btn-color: var(--color-principal-oscuro);
+    --bs-btn-border-color: var(--color-principal);
+    --bs-btn-hover-bg: var(--color-principal-suave);
+    --bs-btn-hover-border-color: var(--color-principal);
+    --bs-btn-hover-color: var(--color-texto);
+    --bs-btn-active-bg: var(--color-principal);
+    --bs-btn-active-border-color: var(--color-principal);
+    --bs-btn-active-color: var(--color-texto);
+}
+.btn-outline-secondary {
+    --bs-btn-color: var(--color-acento-oscuro);
+    --bs-btn-border-color: var(--color-secundario);
+    --bs-btn-hover-bg: var(--color-secundario-suave);
+    --bs-btn-hover-border-color: var(--color-secundario);
+    --bs-btn-hover-color: var(--color-texto);
+    --bs-btn-active-bg: var(--color-secundario);
+    --bs-btn-active-border-color: var(--color-secundario);
+    --bs-btn-active-color: var(--color-texto);
+}
+.btn-peligro {
+    --bs-btn-bg: var(--estado-cancelado-fondo);
+    --bs-btn-border-color: var(--estado-cancelado-fondo);
+    --bs-btn-color: var(--estado-cancelado-texto);
+    --bs-btn-hover-bg: var(--estado-cancelado-texto);
+    --bs-btn-hover-border-color: var(--estado-cancelado-texto);
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-active-bg: var(--estado-cancelado-texto);
+    --bs-btn-active-border-color: var(--estado-cancelado-texto);
+    --bs-btn-active-color: #ffffff;
+}
+.btn-exito {
+    --bs-btn-bg: var(--estado-pagado-fondo);
+    --bs-btn-border-color: var(--estado-pagado-fondo);
+    --bs-btn-color: var(--estado-pagado-texto);
+    --bs-btn-hover-bg: var(--estado-pagado-texto);
+    --bs-btn-hover-border-color: var(--estado-pagado-texto);
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-active-bg: var(--estado-pagado-texto);
+    --bs-btn-active-border-color: var(--estado-pagado-texto);
+    --bs-btn-active-color: #ffffff;
+}
+
+/* ============================================================
+   TARJETAS
+   ============================================================ */
+.card {
+    --bs-card-border-color: var(--color-borde);
+    --bs-card-border-radius: var(--radio);
+    --bs-card-inner-border-radius: calc(var(--radio) - 1px);
+    --bs-card-cap-bg: var(--color-secundario-suave);
+    --bs-card-bg: var(--color-superficie);
+    box-shadow: 0 4px 18px var(--color-sombra);
+}
+.card-header { font-weight: 800; }
+.card-hover { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.card-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 26px var(--color-sombra); }
+
+.tarjeta-estadistica .icono,
+.icono-modulo {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    background-color: var(--color-principal-suave);
+    color: var(--color-principal-oscuro);
+}
+.tarjeta-estadistica .icono.cafe,
+.icono-modulo.cafe {
+    background-color: var(--color-secundario-suave);
+    color: var(--color-acento-oscuro);
+}
+.tarjeta-estadistica .valor { font-size: 1.9rem; font-weight: 800; line-height: 1.1; }
+
+/* ============================================================
+   PORTADA (HERO)
+   ============================================================ */
+.portada {
+    background: linear-gradient(135deg, var(--color-principal-suave) 0%, var(--color-secundario-suave) 100%);
+    border-radius: calc(var(--radio) * 1.5);
+    border: 1px solid var(--color-borde);
+}
+.portada .icono-portada {
+    font-size: 5rem;
+    color: var(--color-principal-oscuro);
+}
+
+/* ============================================================
+   BADGES: ESTADOS, TIPOS Y MODALIDADES
+   ============================================================ */
+.badge-estado, .badge-tipo, .badge-modalidad, .badge-suave {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 999px;
+    padding: 0.3em 0.75em;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+.badge-estado-pendiente { background: var(--estado-pendiente-fondo); color: var(--estado-pendiente-texto); }
+.badge-estado-pagado { background: var(--estado-pagado-fondo); color: var(--estado-pagado-texto); }
+.badge-estado-completado { background: var(--estado-completado-fondo); color: var(--estado-completado-texto); }
+.badge-estado-cancelado { background: var(--estado-cancelado-fondo); color: var(--estado-cancelado-texto); }
+.badge-tipo-curso { background: var(--tipo-curso-fondo); color: var(--tipo-curso-texto); }
+.badge-tipo-bootcamp { background: var(--tipo-bootcamp-fondo); color: var(--tipo-bootcamp-texto); }
+.badge-tipo-taller { background: var(--tipo-taller-fondo); color: var(--tipo-taller-texto); }
+.badge-modalidad {
+    background: var(--modalidad-fondo);
+    color: var(--modalidad-texto);
+    border: 1px solid var(--color-borde);
+}
+.badge-suave { background: var(--color-secundario-suave); color: var(--color-acento-oscuro); }
+.badge-activo { background: var(--estado-pagado-fondo); color: var(--estado-pagado-texto); }
+.badge-inactivo { background: var(--estado-cancelado-fondo); color: var(--estado-cancelado-texto); }
+
+/* ============================================================
+   BARRA DE OCUPACIÓN DE CUPOS
+   ============================================================ */
+.barra-cupos {
+    height: 0.6rem;
+    border-radius: 999px;
+    background-color: var(--color-secundario-suave);
+}
+.barra-cupos .progress-bar { background-color: var(--cupos-ok); border-radius: 999px; }
+.barra-cupos.medio .progress-bar { background-color: var(--cupos-medio); }
+.barra-cupos.agotado .progress-bar { background-color: var(--cupos-agotado); }
+
+/* ============================================================
+   ÍCONO DE ÁREA
+   ============================================================ */
+.icono-area {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-secundario-suave);
+    color: var(--color-acento-oscuro);
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   TABLAS
+   ============================================================ */
+.table {
+    --bs-table-bg: var(--color-superficie);
+    --bs-table-striped-bg: var(--color-fondo);
+    --bs-table-hover-bg: var(--color-principal-suave);
+    --bs-table-color: var(--color-texto);
+    --bs-table-border-color: var(--color-borde);
+    margin-bottom: 0;
+}
+.table thead th {
+    background-color: var(--color-secundario-suave);
+    color: var(--color-acento-oscuro);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+.codigo-uuid {
+    font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+    font-size: 0.82rem;
+    background: var(--color-fondo);
+    color: var(--color-acento-oscuro);
+    border-radius: 0.4rem;
+    padding: 0.1rem 0.4rem;
+    word-break: break-all;
+}
+
+/* ============================================================
+   FORMULARIOS
+   ============================================================ */
+.form-control, .form-select {
+    border-color: var(--color-borde);
+    border-radius: var(--radio-sm);
+    background-color: var(--color-superficie);
+    color: var(--color-texto);
+}
+.form-control:focus, .form-select:focus {
+    border-color: var(--color-principal);
+    box-shadow: 0 0 0 0.2rem var(--bs-focus-ring-color);
+}
+.form-label { font-weight: 700; }
+.form-check-input:checked { background-color: var(--color-principal-oscuro); border-color: var(--color-principal-oscuro); }
+.panel-filtros { background-color: var(--color-superficie); border: 1px solid var(--color-borde); border-radius: var(--radio); }
+
+/* ============================================================
+   ALERTAS (MENSAJES FLASH)
+   ============================================================ */
+.alert { border-radius: var(--radio-sm); border: 0; font-weight: 600; }
+.alert-success { background: var(--estado-pagado-fondo); color: var(--estado-pagado-texto); }
+.alert-info { background: var(--estado-completado-fondo); color: var(--estado-completado-texto); }
+.alert-warning { background: var(--estado-pendiente-fondo); color: var(--estado-pendiente-texto); }
+.alert-danger { background: var(--estado-cancelado-fondo); color: var(--estado-cancelado-texto); }
+
+/* ============================================================
+   PAGINACIÓN
+   ============================================================ */
+.pagination {
+    --bs-pagination-color: var(--color-acento-oscuro);
+    --bs-pagination-bg: var(--color-superficie);
+    --bs-pagination-border-color: var(--color-borde);
+    --bs-pagination-hover-bg: var(--color-principal-suave);
+    --bs-pagination-hover-color: var(--color-texto);
+    --bs-pagination-hover-border-color: var(--color-borde);
+    --bs-pagination-active-bg: var(--color-principal);
+    --bs-pagination-active-border-color: var(--color-principal);
+    --bs-pagination-active-color: var(--color-texto);
+    --bs-pagination-disabled-color: var(--color-texto-suave);
+    --bs-pagination-disabled-bg: var(--color-fondo);
+    --bs-pagination-focus-box-shadow: 0 0 0 0.2rem var(--bs-focus-ring-color);
+}
+
+/* ============================================================
+   ESTADO VACÍO
+   ============================================================ */
+.estado-vacio {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: var(--color-texto-suave);
+}
+.estado-vacio .bi { font-size: 3rem; color: var(--color-principal); }
+
+/* ============================================================
+   LÍNEA DE TIEMPO (HISTORIAL DE ESTADOS)
+   ============================================================ */
+.linea-tiempo { list-style: none; padding-left: 0; margin: 0; }
+.linea-tiempo li {
+    position: relative;
+    padding-left: 1.6rem;
+    padding-bottom: 1rem;
+    border-left: 2px solid var(--color-borde);
+    margin-left: 0.5rem;
+}
+.linea-tiempo li:last-child { border-left-color: transparent; padding-bottom: 0; }
+.linea-tiempo li::before {
+    content: "";
+    position: absolute;
+    left: -0.45rem;
+    top: 0.2rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background: var(--color-principal);
+    border: 2px solid var(--color-superficie);
+}
+
+/* ============================================================
+   PANTALLA DE REDIRECCIÓN
+   ============================================================ */
+.redireccion-icono { font-size: 4.5rem; color: var(--color-principal-oscuro); }
+.cuenta-regresiva {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    background: var(--color-principal-suave);
+    color: var(--color-principal-oscuro);
+    font-size: 2rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================================
+   FOOTER (también se usa en Swagger, ReDoc y la Browsable API,
+   por eso no depende de clases de Bootstrap)
+   ============================================================ */
+.pie-pagina {
+    background-color: var(--color-secundario-suave);
+    border-top: 3px solid var(--color-principal);
+    color: var(--color-texto);
+    font-family: var(--fuente-base);
+    padding: 1.1rem 1rem;
+    text-align: center;
+    font-size: 0.95rem;
+}
+.pie-pagina .pie-autora { font-weight: 800; }
+.pie-pagina .pie-enlaces { margin-top: 0.35rem; font-size: 0.82rem; }
+.pie-pagina .pie-enlaces a {
+    color: var(--color-acento-oscuro);
+    font-weight: 700;
+    margin: 0 0.5rem;
+    text-decoration: none;
+}
+.pie-pagina .pie-enlaces a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENTACIÓN
+   ============================================================ */
+.paso-numero {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--color-principal);
+    color: var(--color-texto);
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+pre.bloque-codigo {
+    background: var(--color-texto);
+    color: var(--color-secundario-suave);
+    border-radius: var(--radio-sm);
+    padding: 1rem;
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+}
+
+/* ============================================================
+   AJUSTES RESPONSIVOS
+   ============================================================ */
+@media (max-width: 575.98px) {
+    .portada .icono-portada { font-size: 3.2rem; }
+    .tarjeta-estadistica .valor { font-size: 1.5rem; }
+    .btn { padding-inline: 0.9rem; }
+}
