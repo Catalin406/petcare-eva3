@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block titulo %}Inicio{% endblock %}
+{% block contenido %}
+<h1 class="mb-1">Hola, {{ user.nombre_visible }}</h1>
+<p class="text-secondary">Bienvenida/o a {{ NOMBRE_COMERCIAL }}. Rol: <strong>{{ user.get_rol_display }}</strong>.</p>
+{% endblock %}

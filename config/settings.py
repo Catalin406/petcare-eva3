@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     # Propias (se suman por fase)
     "core",
+    "usuarios.apps.UsuariosConfig",
 ]
 
 MIDDLEWARE = [
@@ -103,6 +104,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "core.middleware.LoginRequeridoMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -144,6 +146,14 @@ DATABASES = {
         "PORT": config("DB_PORT", default="5432"),
     }
 }
+
+# ============================================================
+# USUARIO PERSONALIZADO Y RUTAS DE AUTENTICACIÓN
+# ============================================================
+AUTH_USER_MODEL = "usuarios.Usuario"
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "inicio"
+LOGOUT_REDIRECT_URL = "login"
 
 # ============================================================
 # VALIDADORES DE CONTRASEÑA
@@ -221,4 +231,5 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "AUTH_HEADER_TYPES": ("Bearer",),
+    "TOKEN_OBTAIN_SERIALIZER": "usuarios.tokens.TokenConRolSerializer",
 }

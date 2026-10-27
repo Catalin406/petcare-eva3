@@ -1,10 +1,19 @@
 # ============================================================
 # URLS.PY / RUTAS RAÍZ DEL PROYECTO
-# Cada app registrará aquí sus rutas en su propia fase.
+# Cada app registra aquí sus rutas en su propia fase.
 # ============================================================
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+from rest_framework_simplejwt.views import TokenRefreshView
+
+from core.views import InicioView
+from usuarios.views import TokenConRolView
 
 urlpatterns = [
+    path("", InicioView.as_view(), name="inicio"),
+    path("", include("usuarios.urls")),
     path("admin/", admin.site.urls),
+    # Autenticación de la API (JWT)
+    path("api/auth/token/", TokenConRolView.as_view(), name="token_obtener"),
+    path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refrescar"),
 ]
