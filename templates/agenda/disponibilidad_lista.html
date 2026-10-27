@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block titulo %}Disponibilidad{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1"><i class="bi bi-clock"></i> Disponibilidad semanal</h1>
+        <p class="text-suave mb-0">Las franjas en que {% if user.es_veterinario %}atiendes{% else %}atienden los veterinarios{% endif %}. Cada franja se parte en bloques de la duración indicada.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'disponibilidad_crear' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Nuevo bloque</a>
+        <a href="{% url 'bloqueo_crear' %}" class="btn btn-outline-secondary"><i class="bi bi-slash-circle"></i> Bloquear fechas</a>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header"><i class="bi bi-calendar-week"></i> Franjas semanales</div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr>{% if not user.es_veterinario %}<th>Veterinario</th>{% endif %}<th>Día</th><th>Desde</th><th>Hasta</th><th>Bloque</th><th></th></tr></thead>
+            <tbody>
+            {% for b in bloques %}
+                <tr>
+                    {% if not user.es_veterinario %}<td>{{ b.profesional.nombre }}</td>{% endif %}
+                    <td>{{ b.get_dia_semana_display }}</td><td>{{ b.hora_inicio|time:"H:i" }}</td><td>{{ b.hora_fin|time:"H:i" }}</td><td>{{ b.duracion_bloque_min }} min</td>
+                    <td class="text-end">
+                        <a href="{% url 'disponibilidad_editar' b.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                        <a href="{% url 'disponibilidad_eliminar' b.pk %}" class="btn btn-sm btn-peligro"><i class="bi bi-trash"></i></a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="6"><div class="estado-vacio"><i class="bi bi-clock"></i><p class="mb-0">Aún no hay franjas definidas.</p></div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header"><i class="bi bi-slash-circle"></i> Bloqueos vigentes y futuros (vacaciones, feriados)</div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr>{% if not user.es_veterinario %}<th>Veterinario</th>{% endif %}<th>Desde</th><th>Hasta</th><th>Motivo</th><th></th></tr></thead>
+            <tbody>
+            {% for b in bloqueos %}
+                <tr>
+                    {% if not user.es_veterinario %}<td>{{ b.profesional.nombre }}</td>{% endif %}
+                    <td>{{ b.inicio|date:"d/m/Y H:i" }}</td><td>{{ b.fin|date:"d/m/Y H:i" }}</td><td>{{ b.motivo }}</td>
+                    <td class="text-end">
+                        <a href="{% url 'bloqueo_editar' b.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                        <a href="{% url 'bloqueo_eliminar' b.pk %}" class="btn btn-sm btn-peligro"><i class="bi bi-trash"></i></a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5"><div class="estado-vacio"><p class="mb-0">Sin bloqueos.</p></div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

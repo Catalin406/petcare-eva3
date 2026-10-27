@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block titulo %}Citas{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1"><i class="bi bi-calendar-check"></i> {% if user.es_tutor %}Mis citas{% elif user.es_veterinario %}Mi agenda{% else %}Citas{% endif %}</h1>
+        <p class="text-suave mb-0">Revisa, confirma o cancela citas.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'calendario' %}" class="btn btn-outline-secondary"><i class="bi bi-calendar3"></i> Calendario</a>
+        {% if puede_agendar %}<a href="{% url 'cita_crear' %}" class="btn btn-primary"><i class="bi bi-calendar-plus"></i> Agendar cita</a>{% endif %}
+    </div>
+</div>
+
+<form method="get" class="panel-filtros p-3 mb-3 row g-2 align-items-end">
+    <div class="col-md-3">
+        <label class="form-label" for="q">Buscar</label>
+        <input type="search" id="q" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Mascota o motivo">
+    </div>
+    <div class="col-md-2">
+        <label class="form-label" for="periodo">Periodo</label>
+        <select id="periodo" name="periodo" class="form-select">
+            <option value="proximas" {% if request.GET.periodo|default:"proximas" == "proximas" %}selected{% endif %}>Próximas</option>
+            <option value="pasadas" {% if request.GET.periodo == "pasadas" %}selected{% endif %}>Pasadas</option>
+            <option value="todas" {% if request.GET.periodo == "todas" %}selected{% endif %}>Todas</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="form-label" for="estado">Estado</label>
+        <select id="estado" name="estado" class="form-select">
+            <option value="">Todos</option>
+            {% for valor, etiqueta in estados %}<option value="{{ valor }}" {% if request.GET.estado == valor %}selected{% endif %}>{{ etiqueta }}</option>{% endfor %}
+        </select>
+    </div>
+    {% if not user.es_veterinario %}
+    <div class="col-md-3">
+        <label class="form-label" for="profesional">Veterinario</label>
+        <select id="profesional" name="profesional" class="form-select">
+            <option value="">Todos</option>
+            {% for p in profesionales %}<option value="{{ p.pk }}" {% if request.GET.profesional == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.nombre }}</option>{% endfor %}
+        </select>
+    </div>
+    {% endif %}
+    <div class="col-md-2 d-grid"><button class="btn btn-outline-primary"><i class="bi bi-funnel"></i> Filtrar</button></div>
+</form>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>Fecha y hora</th><th>Mascota</th><th>Veterinario</th><th>Motivo</th><th>Estado</th></tr></thead>
+            <tbody>
+            {% for cita in citas %}
+                <tr>
+                    <td><a href="{% url 'cita_detalle' cita.pk %}" class="fw-bold">{{ cita.inicio|date:"d/m/Y H:i" }}</a></td>
+                    <td>{{ cita.mascota.nombre }}{% if not user.es_tutor %}<br><small class="text-suave">{{ cita.mascota.tutor.nombre_completo }}</small>{% endif %}</td>
+                    <td>{{ cita.profesional.nombre }}</td>
+                    <td>{{ cita.motivo }}</td>
+                    <td><span class="badge-suave badge-cita-{{ cita.estado|lower }}">{{ cita.get_estado_display }}</span></td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5"><div class="estado-vacio"><i class="bi bi-calendar-x"></i><p class="mb-0">No hay citas con estos filtros.</p></div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% include "parciales/paginacion.html" %}
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block titulo %}Cita de {{ cita.mascota.nombre }}{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">Cita de {{ cita.mascota.nombre }}
+            <span class="badge-suave badge-cita-{{ cita.estado|lower }} fs-6">{{ cita.get_estado_display }}</span></h1>
+        <p class="text-suave mb-0">{{ cita.inicio|date:"l d \d\e F Y, H:i" }} a {{ cita.fin|date:"H:i" }}</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'cita_lista' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Citas</a>
+        {% if puede_atender %}<a href="{% url 'atencion_crear' %}?cita={{ cita.pk }}" class="btn btn-acento"><i class="bi bi-clipboard2-pulse"></i> Registrar atención</a>{% endif %}
+        {% if tiene_atencion and user.rol != "RECEPCIONISTA" %}<a href="{% url 'atencion_detalle' cita.atencion.pk %}" class="btn btn-acento"><i class="bi bi-clipboard2-pulse"></i> Ver atención</a>{% endif %}
+        {% if puede_reprogramar %}<a href="{% url 'cita_editar' cita.pk %}" class="btn btn-outline-primary"><i class="bi bi-calendar-event"></i> Reprogramar</a>{% endif %}
+        {% if puede_eliminar %}<a href="{% url 'cita_eliminar' cita.pk %}" class="btn btn-peligro"><i class="bi bi-trash"></i></a>{% endif %}
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header"><i class="bi bi-info-circle"></i> Datos</div>
+            <div class="card-body">
+                <dl class="mb-0">
+                    <dt>Mascota</dt><dd><a href="{% url 'mascota_detalle' cita.mascota.pk %}">{{ cita.mascota.nombre }}</a> ({{ cita.mascota.get_especie_display }})</dd>
+                    {% if not user.es_tutor %}<dt>Tutor</dt><dd>{{ cita.mascota.tutor.nombre_completo }} · {{ cita.mascota.tutor.telefono }}</dd>{% endif %}
+                    <dt>Veterinario</dt><dd>{{ cita.profesional.nombre }} · {{ cita.profesional.especialidad }}</dd>
+                    <dt>Motivo</dt><dd>{{ cita.motivo }}</dd>
+                    <dt>Creada por</dt><dd>{{ cita.creada_por.nombre_visible|default:"—" }} el {{ cita.creada_en|date:"d/m/Y H:i" }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header"><i class="bi bi-lightning-charge"></i> Acciones</div>
+            <div class="card-body">
+                {% if puede_confirmar or puede_no_asistio or puede_cancelar %}
+                <form method="post" action="{% url 'cita_cambiar_estado' cita.pk %}" class="d-grid gap-2">
+                    {% csrf_token %}
+                    <input type="text" name="comentario" class="form-control" maxlength="200" placeholder="Comentario opcional (queda en el historial)">
+                    <div class="d-flex flex-wrap gap-2">
+                        {% if puede_confirmar %}<button name="estado" value="CONFIRMADA" class="btn btn-exito"><i class="bi bi-check2-circle"></i> Confirmar</button>{% endif %}
+                        {% if puede_no_asistio %}<button name="estado" value="NO_ASISTIO" class="btn btn-outline-secondary"><i class="bi bi-person-x"></i> No asistió</button>{% endif %}
+                        {% if puede_cancelar %}<button name="estado" value="CANCELADA" class="btn btn-peligro" onclick="return confirm('¿Cancelar esta cita?');"><i class="bi bi-x-circle"></i> Cancelar cita</button>{% endif %}
+                    </div>
+                    {% if user.es_tutor %}<div class="form-text">Puedes cancelar con al menos {{ ANTICIPACION_HORAS }} horas de anticipación.</div>{% endif %}
+                </form>
+                {% else %}
+                <p class="text-suave mb-0">Esta cita está en un estado final: no admite más cambios.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header"><i class="bi bi-clock-history"></i> Historial de cambios</div>
+            <div class="card-body">
+                <ul class="linea-tiempo">
+                {% for cambio in cita.historial.all %}
+                    <li>
+                        <strong>{% if cambio.estado_anterior %}{{ cambio.estado_anterior }} → {% endif %}{{ cambio.estado_nuevo }}</strong>
+                        <span class="text-suave">· {{ cambio.fecha|date:"d/m/Y H:i" }} · {{ cambio.usuario.nombre_visible|default:"sistema" }}</span>
+                        {% if cambio.comentario %}<div class="small">{{ cambio.comentario }}</div>{% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

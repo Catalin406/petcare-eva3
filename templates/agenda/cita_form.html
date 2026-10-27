@@ -1,0 +1,6 @@
+{% extends "crud/formulario.html" %}
+{% load static %}
+{% block formsets %}
+<p class="form-text mb-3"><i class="bi bi-info-circle"></i> Solo se muestran los horarios libres del veterinario. {% if user.es_tutor %}Debes pedir la cita con al menos {{ anticipacion }} horas de anticipación.{% endif %}</p>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/cita_form.js' %}"></script>{% endblock %}

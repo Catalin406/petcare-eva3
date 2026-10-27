@@ -514,3 +514,9 @@ a:hover { text-decoration: underline; }
 /* Página de error */
 .pagina-error { text-align: center; padding: 3rem 1rem; }
 .pagina-error .codigo-error { font-size: 5.5rem; font-weight: 800; color: var(--color-principal-oscuro); line-height: 1; }
+
+/* Colores de los eventos de FullCalendar según el estado del bloque */
+.fc .evento-libre { background: var(--estado-pagado-fondo); border-color: var(--estado-pagado-texto); color: var(--estado-pagado-texto); cursor: pointer; }
+.fc .evento-ocupado { background: var(--estado-cancelado-fondo); border-color: var(--estado-cancelado-texto); color: var(--estado-cancelado-texto); }
+.fc .evento-bloqueado { background: var(--color-secundario-suave); border-color: var(--color-acento); color: var(--color-acento-oscuro); }
+.fc .fc-event-title, .fc .fc-event-time { color: inherit; font-weight: 700; }
