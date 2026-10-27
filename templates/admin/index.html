@@ -1,0 +1,15 @@
+{% extends "admin/index.html" %}
+{% comment %} Portada del Admin: saludo con la marca y accesos rápidos al sitio. {% endcomment %}
+{% block content %}
+<div class="pc-bienvenida">
+    <div>
+        <h2>Hola, {{ user.nombre_visible }}</h2>
+        <p>Panel de administración de la clínica veterinaria. Aquí gestionas usuarios, tutores, mascotas, agenda, fichas y vacunas.</p>
+    </div>
+    <div class="pc-accesos">
+        <a href="{% url 'inicio' %}">Ir al sitio</a>
+        <a href="{% url 'swagger' %}">Documentación de la API</a>
+    </div>
+</div>
+{{ block.super }}
+{% endblock %}

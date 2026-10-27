@@ -42,6 +42,17 @@ class RolesTests(TestCase):
         self.assertEqual(admin.rol, Rol.ADMINISTRADOR)
         self.assertTrue(admin.is_staff)
 
+    def test_el_rol_administrador_tiene_todos_los_permisos_pero_los_demas_ninguno(self):
+        admin = crear_usuario("adm", Rol.ADMINISTRADOR)
+        self.assertTrue(admin.has_perm("clientes.delete_mascota"))
+        self.assertTrue(admin.has_module_perms("agenda"))
+        for rol in (Rol.RECEPCIONISTA, Rol.VETERINARIO, Rol.TUTOR):
+            otro = crear_usuario(f"o_{rol}", rol)
+            self.assertFalse(otro.has_perm("clientes.delete_mascota"), rol)
+            self.assertFalse(otro.has_module_perms("agenda"), rol)
+        admin.is_active = False
+        self.assertFalse(admin.has_perm("clientes.delete_mascota"))
+
     def test_correo_unico_sin_distinguir_mayusculas(self):
         crear_usuario("a", Rol.TUTOR, email="Ana@correo.cl")
         with self.assertRaises(IntegrityError), transaction.atomic():

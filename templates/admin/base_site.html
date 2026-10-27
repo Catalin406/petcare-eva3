@@ -1,0 +1,34 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% comment %} ============================================================
+   TEMPLATES/ADMIN/BASE_SITE.HTML / MARCA PETCARE EN EL DJANGO ADMIN
+   Sustituye la cabecera por defecto y carga el CSS con la paleta
+   rosado/café del sitio (static/admin/css/petcare_admin.css).
+   ============================================================ {% endcomment %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:"PetCare" }}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="{% static 'admin/css/petcare_admin.css' %}">
+{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'admin:index' %}" class="pc-marca">
+        <svg class="pc-marca-icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="6.5" cy="10" r="2.2"/><circle cx="10.5" cy="6" r="2.2"/><circle cx="15.5" cy="6" r="2.2"/><circle cx="19" cy="10.5" r="2.2"/>
+            <path d="M12.5 11c-3 0-6 3.2-6 6 0 2 1.6 3 3.2 3 1.2 0 1.9-.6 2.8-.6s1.6.6 2.8.6c1.6 0 3.2-1 3.2-3 0-2.8-3-6-6-6z"/>
+        </svg>
+        <span class="pc-marca-nombre">PetCare</span>
+        <span class="pc-marca-sub">Administración</span>
+    </a>
+</div>
+{% if user.is_anonymous %}
+  {% include "admin/color_theme_toggle.html" %}
+{% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

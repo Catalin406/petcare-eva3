@@ -1,0 +1,145 @@
+/* ============================================================
+   PETCARE_ADMIN.CSS / PALETA ROSADO Y CAFÉ PASTEL EN EL DJANGO ADMIN
+   Misma paleta que static/css/tema.css del sitio. Django 5.x pinta el
+   Admin con variables CSS, así que basta con redefinirlas. También
+   define las insignias de color (.pc-insignia) de las listas.
+   ============================================================ */
+:root {
+    --pc-principal: #f4a7b9;
+    --pc-principal-suave: #fbd3dd;
+    --pc-principal-oscuro: #c9627d;
+    --pc-secundario: #dcc6ad;
+    --pc-secundario-suave: #f1e6d9;
+    --pc-acento: #b08968;
+    --pc-acento-oscuro: #7f5c42;
+    --pc-fondo: #fff4f7;
+    --pc-texto: #4a3b36;
+    --pc-texto-suave: #7a6660;
+    --pc-borde: #f0d9df;
+
+    --primary: var(--pc-principal-oscuro);
+    --secondary: var(--pc-acento);
+    --accent: var(--pc-principal);
+    --primary-fg: #ffffff;
+
+    --body-fg: var(--pc-texto);
+    --body-bg: var(--pc-fondo);
+    --body-quiet-color: var(--pc-texto-suave);
+    --body-loud-color: #2f2420;
+
+    --header-color: #ffffff;
+    --header-branding-color: #ffffff;
+    --header-bg: var(--pc-principal-oscuro);
+    --header-link-color: #ffffff;
+
+    --breadcrumbs-fg: var(--pc-acento-oscuro);
+    --breadcrumbs-link-fg: var(--pc-acento-oscuro);
+    --breadcrumbs-bg: var(--pc-secundario-suave);
+
+    --link-fg: var(--pc-principal-oscuro);
+    --link-hover-color: var(--pc-acento-oscuro);
+    --link-selected-fg: var(--pc-acento-oscuro);
+
+    --hairline-color: var(--pc-borde);
+    --border-color: var(--pc-borde);
+    --darkened-bg: var(--pc-secundario-suave);
+    --selected-bg: var(--pc-principal-suave);
+    --selected-row: var(--pc-principal-suave);
+
+    --button-fg: #ffffff;
+    --button-bg: var(--pc-principal-oscuro);
+    --button-hover-bg: var(--pc-acento-oscuro);
+    --default-button-bg: var(--pc-acento-oscuro);
+    --default-button-hover-bg: var(--pc-principal-oscuro);
+    --close-button-bg: var(--pc-acento);
+    --close-button-hover-bg: var(--pc-acento-oscuro);
+    --delete-button-bg: #b3463f;
+    --delete-button-hover-bg: #8a2e2e;
+
+    --object-tools-fg: #ffffff;
+    --object-tools-bg: var(--pc-acento);
+    --object-tools-hover-bg: var(--pc-acento-oscuro);
+
+    --message-success-bg: #d4eed9;
+    --message-warning-bg: #fdecc8;
+    --message-error-bg: #f6d0d0;
+}
+
+/* Modo oscuro: mismos tonos, más profundos (respeta la preferencia del sistema o el selector del Admin) */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --body-fg: #f1e6d9; --body-bg: #2a201d; --body-quiet-color: #cdb9a4; --body-loud-color: #ffffff;
+        --header-bg: #7f5c42; --breadcrumbs-bg: #3a2d28; --breadcrumbs-fg: #f1e6d9; --breadcrumbs-link-fg: #fbd3dd;
+        --link-fg: #f4a7b9; --link-hover-color: #fbd3dd; --link-selected-fg: #fbd3dd;
+        --hairline-color: #4d3c35; --border-color: #4d3c35; --darkened-bg: #35282a; --selected-bg: #4d3039; --selected-row: #4d3039;
+        --button-bg: #c9627d; --default-button-bg: #b08968;
+    }
+}
+:root[data-theme="dark"] {
+    --body-fg: #f1e6d9; --body-bg: #2a201d; --body-quiet-color: #cdb9a4; --body-loud-color: #ffffff;
+    --header-bg: #7f5c42; --breadcrumbs-bg: #3a2d28; --breadcrumbs-fg: #f1e6d9; --breadcrumbs-link-fg: #fbd3dd;
+    --link-fg: #f4a7b9; --link-hover-color: #fbd3dd; --link-selected-fg: #fbd3dd;
+    --hairline-color: #4d3c35; --border-color: #4d3c35; --darkened-bg: #35282a; --selected-bg: #4d3039; --selected-row: #4d3039;
+    --button-bg: #c9627d; --default-button-bg: #b08968;
+}
+
+/* Tipografía del sitio */
+html, body, input, select, textarea, button, .module caption, #header {
+    font-family: "Nunito", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+}
+
+/* ---------- Cabecera con la marca ---------- */
+#header {
+    border-bottom: 4px solid var(--pc-principal);
+    box-shadow: 0 2px 12px rgba(176, 137, 104, 0.25);
+}
+#site-name a.pc-marca { display: inline-flex; align-items: center; gap: 0.6rem; color: #fff; text-decoration: none; }
+.pc-marca-icono { width: 1.9rem; height: 1.9rem; fill: #fff; background: rgba(255, 255, 255, 0.18); border-radius: 50%; padding: 0.3rem; }
+.pc-marca-nombre { font-size: 1.35rem; font-weight: 800; letter-spacing: 0.02em; }
+.pc-marca-sub { font-size: 0.85rem; font-weight: 600; opacity: 0.9; border-left: 1px solid rgba(255, 255, 255, 0.5); padding-left: 0.6rem; }
+
+/* ---------- Módulos, tablas y botones ---------- */
+.module { border-radius: 0.8rem; overflow: hidden; border: 1px solid var(--pc-borde); }
+.module h2, .module caption, .inline-group h2 {
+    background: var(--pc-secundario-suave); color: var(--pc-acento-oscuro); font-weight: 800;
+}
+.dashboard .module caption a.section { color: var(--pc-acento-oscuro); }
+#changelist table thead th { background: var(--pc-secundario-suave); color: var(--pc-acento-oscuro); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.04em; }
+#changelist table thead th a { color: inherit; }
+#changelist table tbody tr:hover { background: var(--pc-principal-suave); }
+.button, input[type=submit], input[type=button], .submit-row input, a.button { border-radius: 999px; font-weight: 700; }
+.object-tools a { border-radius: 999px; font-weight: 700; }
+.breadcrumbs { font-weight: 600; }
+#changelist-filter { border-radius: 0.8rem; border: 1px solid var(--pc-borde); }
+#changelist-filter h3, #changelist-filter summary { color: var(--pc-acento-oscuro); }
+input[type=text], input[type=password], input[type=email], input[type=url], input[type=number], input[type=date], input[type=time],
+textarea, select { border-radius: 0.5rem; }
+input:focus, textarea:focus, select:focus { border-color: var(--pc-principal); outline: 2px solid rgba(244, 167, 185, 0.45); }
+
+/* ---------- Bienvenida de la portada ---------- */
+.pc-bienvenida {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+    background: linear-gradient(135deg, var(--pc-principal-suave) 0%, var(--pc-secundario-suave) 100%);
+    border: 1px solid var(--pc-borde); border-radius: 1rem; padding: 1rem 1.4rem; margin-bottom: 1.4rem; color: var(--pc-texto);
+}
+.pc-bienvenida h2 { margin: 0 0 0.2rem; font-size: 1.3rem; font-weight: 800; color: var(--pc-texto); background: none; padding: 0; }
+.pc-bienvenida p { margin: 0; color: var(--pc-texto-suave); }
+.pc-accesos { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.pc-accesos a { background: var(--pc-acento); color: #fff; border-radius: 999px; padding: 0.4rem 1rem; font-weight: 700; text-decoration: none; }
+.pc-accesos a:hover { background: var(--pc-acento-oscuro); }
+
+/* ---------- Insignias de estado (format_html en las listas) ---------- */
+.pc-insignia {
+    display: inline-block; border-radius: 999px; padding: 0.15em 0.75em; font-size: 0.78rem; font-weight: 800;
+    letter-spacing: 0.02em; white-space: nowrap; background: var(--pc-secundario-suave); color: var(--pc-acento-oscuro);
+}
+.pc-programada, .pc-pendiente { background: #fdecc8; color: #7a5500; }
+.pc-confirmada, .pc-enviado { background: #d6e4f5; color: #28496f; }
+.pc-atendida, .pc-completado, .pc-activo { background: #d4eed9; color: #25603a; }
+.pc-cancelada, .pc-vencido, .pc-inactivo { background: #f6d0d0; color: #8a2e2e; }
+.pc-no_asistio { background: var(--pc-secundario-suave); color: var(--pc-acento-oscuro); }
+.pc-especie { background: var(--pc-principal-suave); color: #8e3651; }
+.pc-admin { background: #e6def4; color: #4f3d7a; }
+.pc-recep { background: #d6e4f5; color: #28496f; }
+.pc-vet { background: #d4eed9; color: #25603a; }
+.pc-tutor { background: var(--pc-principal-suave); color: #8e3651; }

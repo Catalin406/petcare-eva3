@@ -180,6 +180,13 @@ def _validar_horario(*, mascota, profesional, inicio, fin, ahora, excluir=None):
         )
 
 
+def validar_cita(*, mascota, profesional, inicio, fin, excluir=None, ahora=None):
+    """Valida un horario sin guardar (lo usa el Django Admin en su formulario)."""
+    _validar_horario(
+        mascota=mascota, profesional=profesional, inicio=inicio, fin=fin, ahora=ahora or timezone.now(), excluir=excluir
+    )
+
+
 def _duracion_del_bloque(profesional, inicio):
     """Si no se indica el término, la cita dura lo que dura el bloque donde empieza."""
     local = timezone.localtime(inicio)

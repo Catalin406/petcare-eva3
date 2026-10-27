@@ -69,6 +69,19 @@ class Usuario(AbstractUser):
     def es_tutor(self):
         return self.rol == Rol.TUTOR
 
+    # ---------- Permisos del Django Admin ----------
+    # "ADMINISTRADOR: todo, incluido Django Admin". El rol concede todos los permisos de
+    # modelo sin necesidad de marcar is_superuser ni asignar permisos uno por uno.
+    def has_perm(self, perm, obj=None):
+        if self.is_active and self.rol == Rol.ADMINISTRADOR:
+            return True
+        return super().has_perm(perm, obj)
+
+    def has_module_perms(self, app_label):
+        if self.is_active and self.rol == Rol.ADMINISTRADOR:
+            return True
+        return super().has_module_perms(app_label)
+
     def save(self, *args, **kwargs):
         # Un superusuario siempre es ADMINISTRADOR (si no, perdería acceso).
         if self.is_superuser:
