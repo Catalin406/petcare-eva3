@@ -20,3 +20,6 @@ htmlcov/
 .idea/
 Thumbs.db
 .DS_Store
+
+# Registro del cron de recordatorios (servidor)
+recordatorios.log

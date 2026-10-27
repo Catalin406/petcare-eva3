@@ -1,0 +1,6 @@
+# ============================================================
+# Cron del usuario "ubuntu" (crontab -e): genera los recordatorios todos
+# los días a las 08:00 (hora del servidor). Es idempotente: si corre dos
+# veces no duplica avisos ni reenvía correos.
+# ============================================================
+0 8 * * * cd /home/ubuntu/petcare-eva3 && .venv/bin/python manage.py generar_recordatorios >> /home/ubuntu/petcare-eva3/recordatorios.log 2>&1
