@@ -23,6 +23,7 @@
                     <form method="post" action="{% url 'control_realizado' c.pk %}" class="d-inline">{% csrf_token %}<button class="btn btn-sm btn-exito"><i class="bi bi-check2"></i> Realizado</button></form>
                     {% endif %}
                     <a href="{% url 'control_editar' c.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'control_eliminar' c.pk %}" class="btn btn-sm btn-peligro"><i class="bi bi-trash"></i></a>
                 </td>{% endif %}
             </tr>
         {% empty %}<tr><td colspan="5"><div class="estado-vacio"><i class="bi bi-calendar-x"></i><p class="mb-0">Sin controles programados.</p></div></td></tr>{% endfor %}

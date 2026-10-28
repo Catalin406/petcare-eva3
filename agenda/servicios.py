@@ -362,3 +362,25 @@ def eventos_calendario(usuario, profesional, desde, hasta, *, ahora=None):
             eventos.append(evento)
         dia += timedelta(days=1)
     return eventos
+
+
+# ------------------------------------------------------------
+# PROFESIONALES
+# ------------------------------------------------------------
+@transaction.atomic
+def eliminar_o_desactivar_profesional(profesional):
+    """
+    Con citas, atenciones o vacunas a su nombre no se borra (es historial clínico): se desactiva
+    y deja de aparecer para agendar. Sin historial se elimina junto con su disponibilidad.
+    Devuelve "eliminado" o "desactivado".
+    """
+    if (
+        profesional.citas.exists()
+        or profesional.atenciones.exists()
+        or profesional.vacunas_aplicadas.exists()
+    ):
+        profesional.activo = False
+        profesional.save(update_fields=["activo"])
+        return "desactivado"
+    profesional.delete()
+    return "eliminado"

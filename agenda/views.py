@@ -12,17 +12,17 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.views import View
-from django.views.generic import DetailView, FormView, ListView, TemplateView
+from django.views.generic import CreateView, DetailView, FormView, ListView, TemplateView, UpdateView
 
-from core.mixins import PaginacionConFiltrosMixin, RolRequeridoMixin
+from core.mixins import FormularioSimpleMixin, PaginacionConFiltrosMixin, RolRequeridoMixin
 from usuarios.models import Rol
 
 from . import servicios
-from .forms import BloqueoForm, CitaForm, DisponibilidadForm
+from .forms import BloqueoForm, CitaForm, DisponibilidadForm, ProfesionalForm
 from .models import BloqueoAgenda, Cita, DisponibilidadSemanal, EstadoCita, Profesional
 
 STAFF = (Rol.ADMINISTRADOR, Rol.RECEPCIONISTA)
@@ -340,3 +340,58 @@ class DisponibilidadEliminarView(_EliminarAgendaPropia):
 class BloqueoEliminarView(_EliminarAgendaPropia):
     modelo = BloqueoAgenda
     descripcion = "bloqueo de agenda"
+
+
+# ------------------------------------------------------------
+# PROFESIONALES (solo administrador)
+# ------------------------------------------------------------
+class ProfesionalListaView(RolRequeridoMixin, ListView):
+    roles_permitidos = (Rol.ADMINISTRADOR,)
+    template_name = "agenda/profesional_lista.html"
+    context_object_name = "profesionales"
+    queryset = Profesional.objects.select_related("usuario")
+
+
+class ProfesionalCrearView(RolRequeridoMixin, FormularioSimpleMixin, CreateView):
+    roles_permitidos = (Rol.ADMINISTRADOR,)
+    form_class = ProfesionalForm
+    titulo = "Nuevo profesional"
+    mensaje_exito = "Profesional agregado: ya puede definir su disponibilidad."
+    nombre_url_volver = "profesional_lista"
+    success_url = reverse_lazy("profesional_lista")
+
+
+class ProfesionalEditarView(RolRequeridoMixin, FormularioSimpleMixin, UpdateView):
+    roles_permitidos = (Rol.ADMINISTRADOR,)
+    model = Profesional
+    form_class = ProfesionalForm
+    titulo = "Editar profesional"
+    mensaje_exito = "Profesional actualizado."
+    nombre_url_volver = "profesional_lista"
+    success_url = reverse_lazy("profesional_lista")
+
+
+class ProfesionalEliminarView(RolRequeridoMixin, View):
+    """Con historial no se borra: se desactiva (deja de aparecer para agendar)."""
+
+    roles_permitidos = (Rol.ADMINISTRADOR,)
+
+    def get(self, request, pk):
+        profesional = get_object_or_404(Profesional, pk=pk)
+        con_historial = profesional.citas.exists() or profesional.atenciones.exists() or profesional.vacunas_aplicadas.exists()
+        return render(request, "crud/confirmar_eliminar.html", {
+            "titulo_pagina": f"Eliminar profesional: {profesional.nombre}",
+            "mensaje_confirmacion": (
+                "Tiene citas o atenciones registradas, por eso NO se borrará: quedará desactivado."
+                if con_historial else "No tiene historial: se eliminará junto con su disponibilidad."
+            ),
+            "texto_boton": "Desactivar" if con_historial else "Eliminar",
+            "url_volver": reverse("profesional_lista"),
+        })
+
+    def post(self, request, pk):
+        profesional = get_object_or_404(Profesional, pk=pk)
+        nombre = profesional.nombre
+        resultado = servicios.eliminar_o_desactivar_profesional(profesional)
+        messages.success(request, f"Profesional {nombre} {resultado}.")
+        return redirect("profesional_lista")

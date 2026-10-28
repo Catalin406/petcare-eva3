@@ -17,15 +17,19 @@
 </form>
 <div class="card shadow-sm"><div class="table-responsive">
     <table class="table table-hover align-middle">
-        <thead><tr><th>Mascota</th><th>Vacuna</th><th>Aplicada</th><th>Lote</th><th>Próxima dosis</th></tr></thead>
+        <thead><tr><th>Mascota</th><th>Vacuna</th><th>Aplicada</th><th>Lote</th><th>Próxima dosis</th>{% if puede_registrar %}<th></th>{% endif %}</tr></thead>
         <tbody>
         {% for r in registros %}
             <tr>
                 <td><a href="{% url 'mascota_detalle' r.mascota.pk %}" class="fw-bold">{{ r.mascota.nombre }}</a></td>
                 <td>{{ r.vacuna.nombre }}</td><td>{{ r.fecha_aplicacion|date:"d/m/Y" }}</td><td>{{ r.lote|default:"—" }}</td>
                 <td>{{ r.proxima_dosis|date:"d/m/Y" }}</td>
+                {% if puede_registrar %}<td class="text-end">
+                    <a href="{% url 'registro_vacuna_editar' r.pk %}" class="btn btn-sm btn-outline-secondary" title="Corregir"><i class="bi bi-pencil"></i></a>
+                    {% if puede_eliminar %}<a href="{% url 'registro_vacuna_eliminar' r.pk %}" class="btn btn-sm btn-peligro" title="Eliminar"><i class="bi bi-trash"></i></a>{% endif %}
+                </td>{% endif %}
             </tr>
-        {% empty %}<tr><td colspan="5"><div class="estado-vacio"><i class="bi bi-shield"></i><p class="mb-0">Sin vacunas registradas.</p></div></td></tr>{% endfor %}
+        {% empty %}<tr><td colspan="6"><div class="estado-vacio"><i class="bi bi-shield"></i><p class="mb-0">Sin vacunas registradas.</p></div></td></tr>{% endfor %}
         </tbody>
     </table>
 </div></div>

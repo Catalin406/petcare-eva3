@@ -76,7 +76,7 @@ La web, la API, el Django Admin y el `seed_data` usan **los mismos servicios**: 
 
 | Funcionalidad | Web | API | Reglas (archivo) |
 |---|---|---|---|
-| 1. Tutores y mascotas | `/tutores/`, `/mascotas/` | `/api/tutores/`, `/api/mascotas/` | `clientes/servicios.py` (RUT, desactivar vs eliminar), `core/validadores.py` (dígito verificador) |
+| 1. Tutores y mascotas | `/tutores/`, `/mascotas/` (y `/agenda/profesionales/` para el administrador) | `/api/tutores/`, `/api/mascotas/` | `clientes/servicios.py` (RUT, desactivar vs eliminar), `core/validadores.py` (dígito verificador) |
 | 2. Agenda | `/agenda/calendario/`, `/agenda/citas/`, `/agenda/disponibilidad/` | `/api/citas/`, `/api/profesionales/{id}/horarios/`, `/api/agenda/eventos/` | `agenda/servicios.py` (`crear_cita`, `cambiar_estado`, `horarios_libres`, `TRANSICIONES`) |
 | 3. Ficha clínica | `/clinica/fichas/<id>/`, `/clinica/atenciones/nueva/` | `/api/fichas/`, `/api/atenciones/`, `/api/examenes/` | `clinica/servicios.py` (`registrar_atencion` atómico) |
 | 4. Vacunas y recordatorios | `/recordatorios/`, `/vacunacion/…` | `/api/recordatorios/`, `/api/registros-vacuna/` | `vacunacion/servicios.py`, comando `generar_recordatorios` |
@@ -200,7 +200,7 @@ python manage.py test                      # todas las pruebas en verde
 
 28. **¿Qué hace un `ViewSet` y un router?** El `ViewSet` agrupa list/retrieve/create/update/destroy en una clase; el router genera las URLs. Los permisos por rol están en `PorRol` y el filtrado por objeto en `get_queryset()`.
 29. **¿Para qué sirve un serializer?** Convierte modelos ↔ JSON y valida la entrada. Mis serializers delegan en `servicios.py`, así la API aplica las mismas reglas que la web.
-30. **¿Cómo comprobaste que todo funciona?** 312 pruebas automatizadas: reglas, constraints reales de PostgreSQL, matriz de permisos rol × ruta (web y API), CSRF, sesión, `check --deploy`, Admin y seed. Más `makemigrations --check` y `spectacular --validate --fail-on-warn`.
+30. **¿Cómo comprobaste que todo funciona?** 334 pruebas automatizadas: reglas, constraints reales de PostgreSQL, matriz de permisos rol × ruta (web y API), CSRF, sesión, `check --deploy`, Admin y seed. Más `makemigrations --check` y `spectacular --validate --fail-on-warn`.
 
 ---
 

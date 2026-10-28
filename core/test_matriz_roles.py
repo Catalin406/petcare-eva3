@@ -35,6 +35,8 @@ MATRIZ_WEB = [
     ("registro_vacuna_crear",  False, {A: 200, R: 403, V: 200, T: 403}),
     ("control_lista",          False, {A: 200, R: 200, V: 200, T: 200}),
     ("control_crear",          False, {A: 200, R: 200, V: 200, T: 403}),
+    ("profesional_lista",      False, {A: 200, R: 403, V: 403, T: 403}),
+    ("profesional_crear",      False, {A: 200, R: 403, V: 403, T: 403}),
 ]
 
 # (ruta de la API, método, {rol: código esperado})

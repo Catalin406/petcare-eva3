@@ -121,7 +121,7 @@ Todo lo sensible o dependiente del entorno se configura en `.env` (nunca en el c
 ## 6. Pruebas
 
 ```powershell
-python manage.py test                    # todas (312 pruebas, ~1 min)
+python manage.py test                    # todas (334 pruebas, ~1 min)
 python manage.py test agenda             # una app
 python manage.py check
 python manage.py check --deploy          # con las variables de producción (ver deploy/env.produccion.ejemplo)
@@ -152,7 +152,7 @@ La lógica de negocio vive en cada `servicios.py`; las vistas web, la API, el Ad
 
 ## 8. Rutas principales
 
-**Web** (todas exigen login): `/` · `/login/` · `/logout/` (POST) · `/tutores/` · `/mascotas/` · `/agenda/calendario/` · `/agenda/citas/` · `/agenda/disponibilidad/` · `/clinica/fichas/<mascota>/` · `/clinica/atenciones/nueva/` · `/recordatorios/` · `/vacunacion/{catalogo,aplicadas,controles}/` · `/admin/`
+**Web** (todas exigen login): `/` · `/login/` · `/logout/` (POST) · `/tutores/` · `/mascotas/` · `/agenda/calendario/` · `/agenda/citas/` · `/agenda/profesionales/` (admin) · `/agenda/disponibilidad/` · `/clinica/fichas/<mascota>/` · `/clinica/atenciones/nueva/` · `/recordatorios/` · `/vacunacion/{catalogo,aplicadas,controles}/` · `/admin/`
 
 **API** (JWT o sesión): `POST /api/auth/token/` · `POST /api/auth/token/refresh/` · `/api/tutores/` · `/api/mascotas/` (+ `/{id}/foto/`) · `/api/profesionales/` (+ `/{id}/horarios/?fecha=`) · `/api/disponibilidades/` · `/api/bloqueos/` · `/api/citas/` (+ `cambiar-estado`, `cancelar`, `historial`) · `/api/agenda/eventos/` · `/api/fichas/` · `/api/atenciones/` · `/api/recetas/` · `/api/examenes/` (+ `/{id}/archivo/`) · `/api/vacunas/` · `/api/registros-vacuna/` · `/api/controles/` · `/api/recordatorios/` (+ `panel`, `generar`) · Swagger en `/api/docs/` y esquema en `/api/schema/` (ambos exigen sesión iniciada)
 
@@ -268,6 +268,7 @@ sudo systemctl restart gunicorn-petcare
 - **Cita:** no en el pasado · completa dentro de una franja del profesional · fuera de bloqueos · sin solape con otra cita activa del profesional **ni** de la misma mascota. `ATENDIDA` y `NO_ASISTIO` siguen ocupando el horario; solo `CANCELADA` lo libera.
 - **Estados:** `PROGRAMADA → CONFIRMADA / ATENDIDA / CANCELADA / NO_ASISTIO`; `CONFIRMADA → ATENDIDA / CANCELADA / NO_ASISTIO`; los demás son finales. Cada cambio queda en el historial.
 - **Atención:** se registra desde una cita `PROGRAMADA` o `CONFIRMADA` (que pasa a `ATENDIDA` en la misma transacción) o sin cita (urgencia). Solo el veterinario la escribe; nadie la borra.
-- **Mascota:** con historial no se elimina, se desactiva. **Tutor:** con mascotas no se elimina, se desactiva su cuenta.
+- **Mascota:** con historial no se elimina, se desactiva. **Tutor:** con mascotas no se elimina, se desactiva su cuenta. **Profesional:** con citas, atenciones o vacunas no se elimina, se desactiva.
+- **Vacunas aplicadas:** el veterinario/administrador las corrige (se recalcula la próxima dosis y se descartan los avisos obsoletos); solo el administrador las elimina. **Recetas y exámenes** solo se agregan (registro clínico).
 - **Recordatorios:** `generar_recordatorios` es idempotente (restricciones únicas + `get_or_create` + `enviado_en`); una nueva aplicación de la vacuna cierra el aviso anterior.
 - **Correo del tutor:** única fuente de verdad = el email de su `Usuario`.

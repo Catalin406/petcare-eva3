@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from clientes.servicios import mascotas_visibles
 from core.forms import FormularioBase, FormularioModeloBase, volcar_errores
+from usuarios.models import Rol, Usuario
 
 from . import servicios
 from .models import BloqueoAgenda, DisponibilidadSemanal, Profesional
@@ -110,3 +111,23 @@ class BloqueoForm(FormularioModeloBase):
         if profesional is not None:
             del self.fields["profesional"]
             self.instance.profesional = profesional
+
+
+class ProfesionalForm(FormularioModeloBase):
+    """Ficha profesional de un usuario con rol Veterinario (la cuenta se crea antes en Administración)."""
+
+    class Meta:
+        model = Profesional
+        fields = ["usuario", "especialidad", "activo"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields["usuario"].queryset = Usuario.objects.filter(pk=self.instance.usuario_id)
+            self.fields["usuario"].disabled = True
+        else:
+            # Solo veterinarios activos que todavía no tienen ficha profesional.
+            self.fields["usuario"].queryset = Usuario.objects.filter(
+                rol=Rol.VETERINARIO, is_active=True, profesional__isnull=True
+            )
+            self.fields["usuario"].help_text = "Si no aparece, crea primero la cuenta con rol Veterinario en Administración."

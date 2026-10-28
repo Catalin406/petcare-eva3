@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}Profesionales{% endblock %}
+{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1"><i class="bi bi-person-badge"></i> Profesionales</h1>
+        <p class="text-suave mb-0">Veterinarios que atienden en la clínica. Cada uno define su propia disponibilidad.</p>
+    </div>
+    <a href="{% url 'profesional_crear' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Nuevo profesional</a>
+</div>
+<div class="card shadow-sm"><div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead><tr><th>Nombre</th><th>Especialidad</th><th>Correo</th><th>Estado</th><th></th></tr></thead>
+        <tbody>
+        {% for p in profesionales %}
+            <tr>
+                <td class="fw-bold">{{ p.nombre }}</td><td>{{ p.especialidad }}</td><td>{{ p.usuario.email|default:"—" }}</td>
+                <td>{% if p.activo %}<span class="badge-suave badge-activo">Activo</span>{% else %}<span class="badge-suave badge-inactivo">Desactivado</span>{% endif %}</td>
+                <td class="text-end">
+                    <a href="{% url 'calendario' %}?profesional={{ p.pk }}" class="btn btn-sm btn-outline-secondary" title="Ver su calendario"><i class="bi bi-calendar3"></i></a>
+                    <a href="{% url 'profesional_editar' p.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'profesional_eliminar' p.pk %}" class="btn btn-sm btn-peligro"><i class="bi bi-trash"></i></a>
+                </td>
+            </tr>
+        {% empty %}<tr><td colspan="5"><div class="estado-vacio"><i class="bi bi-person-badge"></i><p class="mb-0">Aún no hay profesionales.</p></div></td></tr>{% endfor %}
+        </tbody>
+    </table>
+</div></div>
+{% endblock %}

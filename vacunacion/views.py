@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
+from django.utils.functional import cached_property
 from django.views import View
 from django.views.generic import CreateView, FormView, ListView, TemplateView, UpdateView
 
@@ -99,7 +100,10 @@ class RegistroVacunaListaView(RolRequeridoMixin, PaginacionConFiltrosMixin, List
         return consulta.order_by("proxima_dosis")
 
     def get_context_data(self, **kwargs):
-        return super().get_context_data(puede_registrar=self.request.user.rol in VETERINARIA, **kwargs)
+        rol = self.request.user.rol
+        return super().get_context_data(
+            puede_registrar=rol in VETERINARIA, puede_eliminar=rol == Rol.ADMINISTRADOR, **kwargs
+        )
 
 
 class RegistroVacunaCrearView(RolRequeridoMixin, FormularioSimpleMixin, FormView):
@@ -124,6 +128,49 @@ class RegistroVacunaCrearView(RolRequeridoMixin, FormularioSimpleMixin, FormView
             self.request,
             f"Vacuna registrada. Próxima dosis de {registro.vacuna.nombre}: {registro.proxima_dosis:%d/%m/%Y}.",
         )
+        return redirect("registro_vacuna_lista")
+
+
+class RegistroVacunaEditarView(RolRequeridoMixin, FormularioSimpleMixin, FormView):
+    roles_permitidos = VETERINARIA
+    form_class = RegistroVacunaForm
+    titulo = "Corregir vacuna aplicada"
+    nombre_url_volver = "registro_vacuna_lista"
+
+    @cached_property
+    def registro(self):
+        return get_object_or_404(servicios.registros_vacuna_visibles(self.request.user), pk=self.kwargs["pk"])
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update(usuario=self.request.user, registro=self.registro)
+        return kwargs
+
+    def form_valid(self, form):
+        registro = form.guardar()
+        if registro is None:
+            return self.render_to_response(self.get_context_data(form=form))
+        messages.success(self.request, f"Vacuna corregida. Nueva próxima dosis: {registro.proxima_dosis:%d/%m/%Y}.")
+        return redirect("registro_vacuna_lista")
+
+
+class RegistroVacunaEliminarView(RolRequeridoMixin, View):
+    """Solo el administrador elimina una aplicación (corrección de errores de digitación)."""
+
+    roles_permitidos = (Rol.ADMINISTRADOR,)
+
+    def get(self, request, pk):
+        registro = get_object_or_404(servicios.registros_vacuna_visibles(request.user), pk=pk)
+        return render(request, "crud/confirmar_eliminar.html", {
+            "titulo_pagina": "Eliminar vacuna aplicada",
+            "mensaje_confirmacion": f"Se eliminará {registro} y sus recordatorios. Úsalo solo para corregir un registro equivocado.",
+            "texto_boton": "Eliminar", "url_volver": reverse("registro_vacuna_lista"),
+        })
+
+    def post(self, request, pk):
+        registro = get_object_or_404(servicios.registros_vacuna_visibles(request.user), pk=pk)
+        registro.delete()
+        messages.success(request, "Vacuna aplicada eliminada.")
         return redirect("registro_vacuna_lista")
 
 
@@ -162,6 +209,23 @@ class ControlEditarView(ControlFormularioMixin, UpdateView):
 
     def get_queryset(self):
         return servicios.controles_visibles(self.request.user)
+
+
+class ControlEliminarView(RolRequeridoMixin, View):
+    roles_permitidos = GESTION
+
+    def get(self, request, pk):
+        control = get_object_or_404(servicios.controles_visibles(request.user), pk=pk)
+        return render(request, "crud/confirmar_eliminar.html", {
+            "titulo_pagina": "Eliminar control periódico",
+            "mensaje_confirmacion": f"Se eliminará «{control}» y sus recordatorios.",
+            "texto_boton": "Eliminar", "url_volver": reverse("control_lista"),
+        })
+
+    def post(self, request, pk):
+        get_object_or_404(servicios.controles_visibles(request.user), pk=pk).delete()
+        messages.success(request, "Control eliminado.")
+        return redirect("control_lista")
 
 
 class ControlRealizadoView(RolRequeridoMixin, View):

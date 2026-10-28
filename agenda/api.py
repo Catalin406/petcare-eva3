@@ -43,6 +43,11 @@ class ProfesionalViewSet(viewsets.ModelViewSet):
     filterset_fields = ["activo", "especialidad"]
     search_fields = ["usuario__first_name", "usuario__last_name", "especialidad"]
 
+    def destroy(self, request, *args, **kwargs):
+        resultado = servicios.eliminar_o_desactivar_profesional(self.get_object())
+        codigo = status.HTTP_204_NO_CONTENT if resultado == "eliminado" else status.HTTP_200_OK
+        return Response({"resultado": resultado} if codigo == 200 else None, status=codigo)
+
     @extend_schema(
         parameters=[OpenApiParameter("fecha", OpenApiTypes.DATE, required=True, description="AAAA-MM-DD")],
         responses=HorarioSerializer(many=True),

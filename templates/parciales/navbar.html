@@ -52,6 +52,7 @@
                 {% endif %}
 
                 {% if user.es_administrador %}
+                <li class="nav-item"><a class="nav-link {% if 'profesional' in actual %}active{% endif %}" href="{% url 'profesional_lista' %}"><i class="bi bi-person-badge"></i> Profesionales</a></li>
                 <li class="nav-item"><a class="nav-link {% if 'disponibilidad' in actual %}active{% endif %}" href="{% url 'disponibilidad_lista' %}"><i class="bi bi-clock"></i> Disponibilidad</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}"><i class="bi bi-gear"></i> Administración</a></li>
                 {% endif %}

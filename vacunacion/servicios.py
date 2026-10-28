@@ -75,11 +75,39 @@ def registrar_vacuna(*, mascota, vacuna, fecha_aplicacion, lote="", usuario=None
     nuevo.proxima_dosis = nuevo.calcular_proxima_dosis()  # antes de validar: la columna no admite nulos
     nuevo.full_clean()
     nuevo.save()
-    # La aplicación nueva "cierra" los avisos de las dosis anteriores de esa misma vacuna.
+    _cerrar_avisos_anteriores(mascota, vacuna, fecha_aplicacion)
+    return nuevo
+
+
+def _cerrar_avisos_anteriores(mascota, vacuna, fecha_aplicacion):
+    """Una aplicación nueva "cierra" los avisos de las dosis anteriores de esa misma vacuna."""
     Recordatorio.objects.filter(
         registro_vacuna__mascota=mascota, registro_vacuna__vacuna=vacuna, registro_vacuna__fecha_aplicacion__lt=fecha_aplicacion
     ).exclude(estado=EstadoRecordatorio.COMPLETADO).update(estado=EstadoRecordatorio.COMPLETADO)
-    return nuevo
+
+
+@transaction.atomic
+def actualizar_registro_vacuna(registro, *, vacuna, fecha_aplicacion, lote, usuario):
+    """Corrige una aplicación ya registrada; la próxima dosis se recalcula y los avisos obsoletos se descartan."""
+    if usuario.rol not in (Rol.ADMINISTRADOR, Rol.VETERINARIO):
+        raise PermissionDenied("Solo veterinarios y administradores modifican vacunas aplicadas.")
+    mascota = registro.mascota
+    if vacuna.pk != registro.vacuna_id and not vacuna.activa:
+        raise ValidationError({"vacuna": "Esa vacuna está desactivada en el catálogo."})
+    if vacuna.especie_aplicable and vacuna.especie_aplicable != mascota.especie:
+        raise ValidationError(
+            {"vacuna": f"{vacuna.nombre} es para {vacuna.get_especie_aplicable_display().lower()}s, no para {mascota.get_especie_display().lower()}s."}
+        )
+    registro.vacuna, registro.fecha_aplicacion, registro.lote = vacuna, fecha_aplicacion, lote
+    registro.proxima_dosis = registro.calcular_proxima_dosis()
+    registro.full_clean()
+    registro.save()
+    # Los avisos de esta aplicación con otra fecha objetivo ya no valen: el comando creará los nuevos.
+    registro.recordatorios.exclude(estado=EstadoRecordatorio.COMPLETADO).exclude(
+        fecha_objetivo=registro.proxima_dosis
+    ).delete()
+    _cerrar_avisos_anteriores(mascota, vacuna, fecha_aplicacion)
+    return registro
 
 
 def marcar_control_realizado(control, *, realizado=True):
