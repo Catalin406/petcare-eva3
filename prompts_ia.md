@@ -1,162 +1,208 @@
-# Registro de apoyos de IA — PetCare (Evaluación 3)
+# Registro de uso de IA — PetCare (Evaluación 3)
 
 **Estudiante:** Catalina Quezada Sanzana · **Asignatura:** Desarrollo Backend (INACAP) · **Proyecto:** Sistema de Gestión de Citas y Fichas Médicas para Veterinaria (PetCare)
 
-Este documento deja constancia de **cómo usé inteligencia artificial** en el proyecto: qué le pedí, qué obtuve y qué revisé o corregí yo. Las herramientas fueron **Claude (chat)** para analizar el enunciado y **Claude Code** (asistente en el editor) para construir y verificar el código bajo mi dirección.
+Aquí cuento, de forma simple, **cómo usé inteligencia artificial** en este proyecto: qué le pedí, qué me respondió y qué revisé o corregí yo. Usé dos herramientas:
 
-> **Cómo leer este archivo:** primero la tabla resumen; luego una ficha por cada apoyo (número, fecha, herramienta, objetivo, prompt, resultado, qué revisé/corregí y archivos afectados); al final, mi reflexión. Los textos marcados con ✏️ son datos que solo yo conozco y completo antes de entregar.
+- **Claude (chat):** para entender el enunciado y la rúbrica.
+- **Claude Code** (el asistente dentro del editor): para construir el código y probarlo, siempre bajo mis instrucciones.
+
+> **Cómo leer este archivo:** primero está la tabla resumen. Después hay una ficha por cada uso de la IA, con lo que pedí, lo que salió, lo que revisé yo y los archivos que cambiaron. Al final está mi reflexión y, en el anexo, el prompt completo. Lo marcado con ✏️ lo completo yo antes de entregar, porque solo yo sé esos datos.
 
 ---
 
 ## Tabla resumen
 
-| N° | Fecha | Herramienta | Objetivo | Archivos principales afectados |
+| N° | Fecha | Herramienta | Qué se hizo | Archivos principales |
 |---|---|---|---|---|
-| 1 | ✏️ (antes del 26/10/2026) | Claude (chat) | Analizar el enunciado de la evaluación y la rúbrica; transformarlos en requisitos concretos y en un prompt de trabajo | Ninguno (insumo del prompt 2) |
-| 2 | 26/10/2026 | Claude Code | Prompt maestro: construir PetCare completo (4 funcionalidades, roles, API, Admin, seed, pruebas, documentación) | Todo el repositorio |
-| 3.1 | 26/10/2026 | Claude Code | Revisar el plan propuesto y aprobarlo con 8 ajustes de diseño | `agenda/models.py`, `clientes/models.py`, `clinica/*`, `core/archivos.py`, `clientes/servicios.py` |
-| 3.2 | 26/10/2026 | Claude Code | Corregir la versión de Python del entorno (3.12 para coincidir con Ubuntu 24.04) | `.venv` (local), `requirements.txt` |
-| 3.3 | 26/10/2026 | Claude Code | Usar mi rol local `catalina` en vez de `postgres` y documentar ambas opciones de creación de la BD | `crear_bd.sql`, `crear_bd_con_rol_existente.sql`, `README.md` |
-| 3.4 | 26/10/2026 | Claude Code | Autorizar el avance por todas las fases sin pedir aprobación intermedia (con condiciones de parada) | Historial de commits |
-| 4 | ✏️ (fecha del despliegue) | Claude Code (+ ✏️ chat si lo usé) | Apoyo para el despliegue en AWS EC2: archivos de Nginx, Gunicorn, cron y guía paso a paso | `deploy/*`, `README.md` §10 |
+| 1 | ✏️ | Claude (chat) | Entender el enunciado y la rúbrica y convertirlos en una lista de requisitos | Ninguno (sirvió para armar el prompt 2) |
+| 2 | 26/10/2026 | Claude Code | Prompt principal: construir PetCare completo | Todo el proyecto |
+| 3.1 | 26/10/2026 | Claude Code | Revisar el plan y aprobarlo con 8 cambios míos | `clientes/`, `agenda/`, `clinica/`, `core/archivos.py` |
+| 3.2 | 26/10/2026 | Claude Code | Cambiar el entorno a Python 3.12 (el mismo del servidor) | `.venv` (solo local) |
+| 3.3 | 26/10/2026 | Claude Code | Crear la base con mi usuario `catalina` y documentar dos formas de hacerlo | `crear_bd*.sql`, `README.md` |
+| 3.4 | 26/10/2026 | Claude Code | Dejar que avanzara solo por todas las fases, con límites claros | Commits |
+| 3.5 | 26 al 28/10/2026 | Claude Code | Problemas que aparecieron al probar y cómo se arreglaron | Varios (ver tabla 3.5) |
+| 3.6 | 27/10/2026 | Claude Code | Antes de subir: Swagger con login y `ALLOWED_HOSTS` con `localhost` | `config/urls.py`, `deploy/`, `README.md` |
+| 3.7 | 28/10/2026 | Claude Code | Pedí una revisión completa contra el enunciado y la rúbrica | Calendario y documentos |
+| 3.8 | 28/10/2026 | Claude Code | Cerrar los huecos que dejó esa revisión (CRUD en la web) | `vacunacion/`, `agenda/`, plantillas |
+| 4 | ✏️ | Claude Code (y ✏️ chat, si lo usé) | Ayuda con el despliegue en AWS | `deploy/*`, `README.md` §10 |
 
 ---
 
-## 1. Análisis del enunciado y la rúbrica
+## 1. Entender el enunciado y la rúbrica
 
 | Campo | Detalle |
 |---|---|
-| **N° / Fecha** | 1 / ✏️ (completar con la fecha de esa conversación) |
+| **N° / Fecha** | 1 / ✏️ (la fecha de esa conversación) |
 | **Herramienta** | Claude (chat) |
-| **Objetivo** | Entender qué pide el Proyecto 1 y cómo se evalúa (rúbrica de 5 criterios), y convertirlo en una lista de requisitos verificables para poder pedirle el desarrollo a Claude Code de forma ordenada. |
-| **Prompt utilizado** | ✏️ Pegar aquí (textual o resumido) lo que le escribí al chat: el enunciado del proyecto, la rúbrica y mi pedido de análisis. |
-| **Resultado obtenido** | Una interpretación de los 5 criterios con el nivel "Excelente" para cada uno (PostgreSQL con restricciones a nivel de base de datos, Django Admin personalizado, CRUD con reglas de negocio, seguridad/sesiones/IA, despliegue y defensa) y la estructura del prompt maestro (entrada 2): roles, funcionalidades, reglas obligatorias, documentación y verificaciones finales. |
-| **Qué revisé o corregí yo** | ✏️ Completar (por ejemplo: comprobé cada criterio contra el PDF de la rúbrica; agregué la exigencia de archivos privados; pedí HTTPS detrás de proxy como en la EVA 2…). |
-| **Archivos afectados** | Ninguno directamente; el resultado alimentó la entrada 2. |
+| **Para qué** | Entender qué pide el Proyecto 1 y cómo me van a evaluar (los 5 criterios), y pasarlo a una lista clara de cosas por hacer para después pedírselas a Claude Code en orden. |
+| **Qué le pedí** | ✏️ Pegar aquí (tal cual o resumido) lo que le escribí al chat: el enunciado, la rúbrica y lo que quería que hiciera. |
+| **Qué salió** | Una explicación de lo que significa "Excelente" en cada criterio (base de datos con reglas, Admin personalizado, CRUD con reglas del caso, seguridad y sesiones, despliegue y defensa). Con eso armé el prompt principal de la entrada 2. |
+| **Qué revisé o corregí yo** | ✏️ Contar qué comprobaste (por ejemplo: "lo comparé con el PDF de la rúbrica", "agregué que los archivos clínicos fueran privados", "pedí HTTPS detrás de Nginx como en mi EVA 2"). |
+| **Archivos** | Ninguno. |
 
 ---
 
-## 2. Prompt maestro en Claude Code
+## 2. Prompt principal en Claude Code
 
 | Campo | Detalle |
 |---|---|
 | **N° / Fecha** | 2 / 26/10/2026 |
 | **Herramienta** | Claude Code (modelo Claude Sonnet 5.5) en VS Code |
-| **Objetivo** | Construir el sistema completo en un repositorio nuevo, usando mi EVA 2 solo como referencia de arquitectura y estilo visual, y cumpliendo la rúbrica en nivel "Excelente". |
-| **Prompt utilizado** | **Texto completo en el [Anexo A](#anexo-a--prompt-maestro-completo-textual).** Resumen: stack (Python/Django 5.2/DRF/SimpleJWT/drf-spectacular/psycopg 3/decouple/gunicorn, solo PostgreSQL, `America/Santiago`, `es-cl`); roles ADMINISTRADOR, RECEPCIONISTA, VETERINARIO y TUTOR con `is_staff` sincronizado; 4 funcionalidades (tutores y mascotas; agenda con `ExclusionConstraint`; ficha clínica; vacunas y recordatorios); web responsiva con la paleta rosado/café de mi EVA 2; API con JWT y Swagger; Django Admin personalizado; `seed_data` idempotente; pruebas; README, `prompts_ia.md` y `GUIA_DEFENSA.md`; reglas: mostrar `git remote -v` y un plan y **esperar mi aprobación**, commits pequeños en español, **no hacer push** hasta que yo diga "commit y push", cero secretos en el código. |
-| **Resultado obtenido** | Un plan por fases que yo revisé (entrada 3.1) y luego la implementación: apps `usuarios`, `clientes`, `agenda`, `clinica`, `vacunacion` y `core`; 334 pruebas automatizadas; Admin con marca PetCare; API documentada sin advertencias; carpeta `deploy/`; y los tres documentos (README, este archivo y la guía de defensa). |
-| **Qué revisé o corregí yo** | Pedí ver el plan **antes** de que se escribiera código, lo ajusté (entrada 3.1) y definí el entorno (entradas 3.2 y 3.3). ✏️ Agregar aquí lo que verifiqué al probar la aplicación (flujos por rol, intento de ver datos de otro tutor, solapamiento de citas, etc.). |
-| **Archivos afectados** | Todo el repositorio (ver `git log`). |
+| **Para qué** | Construir todo el sistema en un repositorio nuevo, usando mi EVA 2 solo como guía de orden y de estilo visual, y cumpliendo la rúbrica en nivel "Excelente". |
+| **Qué le pedí** | El texto completo está en el [Anexo A](#anexo-a--prompt-principal-completo-textual). En corto: Django 5.2 con API, solo PostgreSQL, cuatro roles (administrador, recepcionista, veterinario y tutor), las 4 funcionalidades del caso, la misma paleta rosado y café de mi EVA 2, Admin personalizado, datos de ejemplo, pruebas automáticas, y tres documentos (README, este archivo y la guía de defensa). Reglas: que me mostrara un plan y **esperara mi aprobación**, que no subiera nada hasta que yo dijera "commit y push", y que no dejara claves en el código. |
+| **Qué salió** | Primero un plan por fases, que yo revisé (entrada 3.1). Después el sistema: las apps `usuarios`, `clientes`, `agenda`, `clinica`, `vacunacion` y `core`, más de 300 pruebas automáticas, el Admin con la marca PetCare, la API documentada y la carpeta `deploy/`. |
+| **Qué revisé o corregí yo** | Pedí ver el plan **antes** de que se escribiera código, lo cambié (entrada 3.1) y decidí cómo sería mi entorno (entradas 3.2 y 3.3). ✏️ Agregar lo que probaste tú en la aplicación (entrar con cada rol, intentar ver datos de otro tutor, intentar dos citas a la misma hora, etc.). |
+| **Archivos** | Todo el repositorio (ver `git log`). |
 
 ---
 
-## 3. Correcciones y decisiones que le indiqué durante el desarrollo
+## 3. Lo que le corregí o le pedí durante el trabajo
 
-### 3.1 Aprobación del plan con ajustes
+### 3.1 Aprobé el plan, pero con cambios
 
 | Campo | Detalle |
 |---|---|
 | **N° / Fecha** | 3.1 / 26/10/2026 |
 | **Herramienta** | Claude Code |
-| **Objetivo** | Corregir el plan propuesto antes de escribir código. |
-| **Prompt utilizado (resumido)** | "Apruebo el plan con estos ajustes": (1) mostrar `git remote -v` y confirmar la clonación de `../referencia_eva2` y el uso de su `tema.css`; (2) entorno con `py`, `.venv`, sin Docker; (3) `ATENDIDA` y `NO_ASISTIO` siguen ocupando el horario; (4) **eliminar el correo de `Tutor`** y usar el del `Usuario`; (5) **sin `ExclusionConstraint` en la disponibilidad semanal** (solo validación en el servicio, con pruebas); la restricción queda solo en `Cita`; (6) la atención se puede registrar desde una cita `PROGRAMADA` o `CONFIRMADA` y también **sin cita** (urgencia); (7) **archivos privados** (adjuntos de exámenes y fotos) servidos solo por una vista protegida, con pruebas 403/404 y aviso en el README para Nginx; (8) la API expone los archivos como URL a esa vista, nunca como ruta de media. |
-| **Resultado obtenido** | Se aplicaron los 8 ajustes: `Tutor` sin campo `correo`; validación de solape de disponibilidad en `agenda/servicios.py` (con pruebas); `Atencion.cita` opcional; `core/archivos.py` (`AlmacenamientoPrivado` sin URL pública) y vistas `mascota_foto` / `examen_archivo`; acciones `/foto/` y `/archivo/` en la API; sección 10.7 del README. |
-| **Qué revisé o corregí yo** | Yo pedí eliminar el correo duplicado (una sola fuente de verdad), evitar una `ExclusionConstraint` sobre horas porque complicaría el despliegue y exigir archivos privados por tratarse de datos clínicos. |
-| **Archivos afectados** | `clientes/models.py`, `agenda/models.py`, `agenda/servicios.py`, `clinica/models.py`, `clinica/servicios.py`, `core/archivos.py`, `clientes/views.py`, `clinica/views.py`, `*/api.py`, `README.md`. |
+| **Para qué** | Arreglar el plan antes de que se escribiera código. |
+| **Qué le pedí (resumido)** | "Apruebo el plan con estos cambios": (1) que mostrara `git remote -v` y confirmara que clonó mi EVA 2 y que usaría su `tema.css`; (2) entorno con `py` y `.venv`, sin Docker; (3) las citas atendidas y las de "no asistió" siguen ocupando el horario; (4) **quitar el correo del Tutor** y usar el del Usuario; (5) **no usar la restricción de PostgreSQL en la disponibilidad semanal**, solo validarla en el servicio y con pruebas; (6) poder registrar una atención desde una cita **o sin cita** (urgencia); (7) **fotos y exámenes privados**: solo se entregan con una vista que revisa login y permisos, con pruebas, y avisar en el README que Nginx no debe mostrar esa carpeta; (8) que la API dé esos archivos como una dirección protegida, nunca como una ruta pública. |
+| **Qué salió** | Se aplicaron los 8 cambios: Tutor sin campo de correo; el solape de horarios se valida en `agenda/servicios.py` (con pruebas); la atención puede no tener cita; archivos privados en `core/archivos.py` con sus vistas protegidas; y la sección 10.7 del README. |
+| **Qué revisé o corregí yo** | Pedí quitar el correo repetido (así hay una sola fuente de verdad), evitar la restricción con horas porque complicaba el despliegue, y proteger los archivos porque son datos clínicos. |
+| **Archivos** | `clientes/models.py`, `agenda/models.py`, `agenda/servicios.py`, `clinica/*`, `core/archivos.py`, `*/api.py`, `README.md`. |
 
-### 3.2 Versión de Python del entorno
+### 3.2 Cambio de versión de Python
 
 | Campo | Detalle |
 |---|---|
 | **N° / Fecha** | 3.2 / 26/10/2026 |
 | **Herramienta** | Claude Code |
-| **Objetivo** | Que el entorno local coincida con el servidor (Ubuntu 24.04 trae Python 3.12). |
-| **Prompt utilizado (resumido)** | "Sí, recrea el `.venv` con Python 3.12 (`py -3.12`), verifica con `python --version` y `python manage.py check`, y continúa." (Antes yo había indicado Python 3.14; la IA me advirtió que existía la 3.12 y que coincidía con el servidor.) |
-| **Resultado obtenido** | `.venv` recreado con Python 3.12.0; `requirements.txt` instalado y `check` sin problemas. |
-| **Qué revisé o corregí yo** | Decidí priorizar la paridad local/servidor sobre la versión más nueva. |
-| **Archivos afectados** | `.venv/` (no versionado). |
+| **Para qué** | Que mi computador use la misma versión que el servidor (Ubuntu 24.04 trae Python 3.12). |
+| **Qué le pedí (resumido)** | "Sí, vuelve a crear el `.venv` con Python 3.12, comprueba la versión y sigue." Yo había dicho Python 3.14, pero la IA me avisó que tenía la 3.12 instalada y que era la del servidor. |
+| **Qué salió** | `.venv` nuevo con Python 3.12.0 y `check` sin errores. |
+| **Qué revisé o corregí yo** | Preferí que mi computador y el servidor fueran iguales antes que usar la versión más nueva. |
+| **Archivos** | Ninguno (el `.venv` no se sube). |
 
-### 3.3 Base de datos local con mi rol `catalina`
+### 3.3 Base de datos con mi usuario `catalina`
 
 | Campo | Detalle |
 |---|---|
 | **N° / Fecha** | 3.3 / 26/10/2026 |
 | **Herramienta** | Claude Code |
-| **Objetivo** | Poder crear la base sin la contraseña del superusuario `postgres`. |
-| **Prompt utilizado (resumido)** | "No tengo la contraseña de `postgres`, por eso el rol `petcare` nunca se creó. Tengo el rol local `catalina` con `CREATEDB`. Crea la base con dueño `catalina`, activa `btree_gist` como dueño (extensión *trusted*), deja el `.env` local con ese rol y documenta **ambas opciones** (con superusuario o con un rol con `CREATEDB`). En AWS se usará otro usuario y otra contraseña." |
-| **Resultado obtenido** | Base `petcare_db` creada con dueño `catalina`, `btree_gist` activada y conexión verificada; nuevo script `crear_bd_con_rol_existente.sql`; `crear_bd.sql` queda como opción A (la contraseña se pasa por variable de `psql`, nunca escrita en el repositorio); ambas opciones documentadas en el README. |
-| **Qué revisé o corregí yo** | Detecté el problema de credenciales, ofrecí la alternativa y pedí que no quedara ninguna contraseña en el repositorio. |
-| **Archivos afectados** | `crear_bd.sql`, `crear_bd_con_rol_existente.sql`, `README.md` §4.1, `.env` (local, no versionado). |
+| **Para qué** | Poder crear la base sin la clave del usuario `postgres`, que no tengo. |
+| **Qué le pedí (resumido)** | "No tengo la clave de `postgres`. Tengo mi usuario `catalina` con permiso para crear bases. Crea la base con ese usuario, activa `btree_gist`, deja mi `.env` con esos datos y escribe en la documentación las dos formas de hacerlo. En AWS usaré otro usuario y otra clave." |
+| **Qué salió** | Base `petcare_db` creada y probada; un script nuevo (`crear_bd_con_rol_existente.sql`); `crear_bd.sql` como la otra opción (la clave se escribe al ejecutarlo, no queda en el repositorio); ambas formas explicadas en el README. |
+| **Qué revisé o corregí yo** | Me di cuenta del problema con la clave, propuse la alternativa y pedí que ninguna contraseña quedara escrita en el repositorio. |
+| **Archivos** | `crear_bd.sql`, `crear_bd_con_rol_existente.sql`, `README.md` §4.1. |
 
-### 3.4 Avance autónomo por fases
+### 3.4 Avanzar solo por todas las fases
 
 | Campo | Detalle |
 |---|---|
 | **N° / Fecha** | 3.4 / 26/10/2026 |
 | **Herramienta** | Claude Code |
-| **Objetivo** | Acelerar la construcción sin perder control. |
-| **Prompt utilizado (resumido)** | "Avanza por TODAS las fases restantes sin detenerte a pedir aprobación; haz un commit local por fase (sin push) y verifica `check` y `test` antes de cada commit. Detente solo si hay un error que no puedes resolver, necesitas que escriba algo (una contraseña) o una decisión cambia algo importante del plan aprobado. Al final entrégame el resumen y espera «commit y push»." |
-| **Resultado obtenido** | Fases 3 a 12 construidas con commits locales en español; ningún push realizado. |
-| **Qué revisé o corregí yo** | Mantuve el control del push y de las decisiones de diseño. ✏️ Anotar si revisé los commits uno por uno. |
-| **Archivos afectados** | Historial de git. |
+| **Para qué** | Avanzar más rápido sin perder el control. |
+| **Qué le pedí (resumido)** | "Sigue con todas las fases sin pedirme permiso cada vez. Haz un commit por fase, sin subir nada, y prueba antes de cada commit. Para solo si hay un error que no puedes resolver, si necesitas que yo escriba algo (como una clave) o si algo cambia el plan. Al final muéstrame el resumen y espera mi 'commit y push'." |
+| **Qué salió** | Las fases 3 a 11 hechas, cada una con su commit en español y sin ningún push. |
+| **Qué revisé o corregí yo** | Me quedé con el control de cuándo se sube el código y de las decisiones de diseño. ✏️ Anotar si revisaste los commits uno por uno. |
+| **Archivos** | Historial de git. |
 
-### 3.5 Hallazgos técnicos que las pruebas obligaron a corregir (durante el desarrollo)
+### 3.5 Problemas que aparecieron al probar y cómo se arreglaron
 
-Estos problemas aparecieron al ejecutar las pruebas y se corrigieron en el código; los dejo como evidencia de que **no acepté el código sin verificarlo**:
+Esto muestra que **no acepté el código sin revisarlo**: cada problema salió al correr las pruebas o al revisar, y se corrigió.
 
-| Hallazgo | Corrección |
+| Qué pasaba | Cómo se arregló |
 |---|---|
-| El almacenamiento de archivos privados fijaba su carpeta al importar el módulo, así que las pruebas escribían en la carpeta real. | `AlmacenamientoPrivado` lee `ARCHIVOS_PRIVADOS_ROOT` en cada uso y no tiene `.url`. |
-| `ClearableFileInput` (formularios y Admin) intenta mostrar `foto.url`, que no existe para archivos privados. | Se usan `FileInput` en los formularios y en el Admin. |
-| El Admin de `Cita` fallaba al validar la `ExclusionConstraint` porque el campo `estado` (de la condición) no está en el formulario. | El formulario del Admin incluye `estado` en las exclusiones de validación. |
-| El rol ADMINISTRADOR no tenía permisos de modelo en el Admin (solo `is_staff`). | `Usuario.has_perm` / `has_module_perms` conceden todo al rol. |
-| Mensajes de error inconsistentes cuando una cita caía fuera del horario o en el pasado. | Se valida primero "pasado" y se unifica el mensaje de "no atiende en ese horario". |
-| El validador automático de unicidad de DRF exigía `profesional` en el cuerpo de la disponibilidad del veterinario. | Se desactiva en ese serializer y se valida el solape en el servicio. |
-| Pruebas dependientes de la hora del día (citas "de hoy"). | Se fijan a las 12:00 hora de Santiago. |
+| Los archivos privados se guardaban siempre en la carpeta real, incluso en las pruebas. | Ahora la carpeta se lee de la configuración cada vez, y esos archivos no tienen dirección pública. |
+| Los formularios y el Admin intentaban mostrar la dirección de la foto, que no existe porque es privada. | Se cambió el tipo de campo de archivo. |
+| El Admin fallaba al validar el horario de una cita. | El formulario del Admin ahora incluye el estado en esa validación. |
+| El rol Administrador no podía usar ningún modelo del Admin (solo tenía permiso de entrar). | Ahora ese rol tiene todos los permisos. |
+| Los mensajes de error de una cita en el pasado o fuera de horario eran confusos. | Se revisa primero el pasado y se unificó el mensaje de "no atiende en ese horario". |
+| La API pedía el campo "profesional" aunque el veterinario ya era el dueño de su horario. | Se quitó esa exigencia y el solape se revisa en el servicio. |
+| Algunas pruebas dependían de la hora del día. | Se fijaron a las 12:00 hora de Santiago. |
+| El calendario cargaba dos archivos de FullCalendar desde direcciones que no existen (error 404): sin eso quedaba en inglés. | Se corrigieron las direcciones (ver 3.7). |
+| Borrar un profesional con historial por la API daba error 500. | Ahora se desactiva, igual que en la web (ver 3.8). |
 
----
-
-## 4. Apoyo para el despliegue en AWS
+### 3.6 Ajustes antes de subir el proyecto
 
 | Campo | Detalle |
 |---|---|
-| **N° / Fecha** | 4 / ✏️ (fecha del despliegue) |
-| **Herramienta** | Claude Code (archivos y guía) · ✏️ Claude chat, si lo usé durante el despliegue |
-| **Objetivo** | Dejar listo y documentado el despliegue en EC2 (Ubuntu 24.04): PostgreSQL, Gunicorn como servicio, Nginx con HTTPS (Let's Encrypt) en `codelab-catalina.duckdns.org` (IP `54.152.231.63`), cron de recordatorios y grupo de seguridad. |
-| **Prompt utilizado** | Parte del prompt maestro (entrada 2): "Nginx pasa `X-Forwarded-Proto` con `include proxy_params`", variables `DETRAS_DE_PROXY_HTTPS` y `CSRF_TRUSTED_ORIGINS`, README con despliegue y archivos privados que Nginx no debe exponer. ✏️ Agregar los prompts adicionales que use durante el despliegue real. |
-| **Resultado obtenido** | `deploy/nginx-petcare.conf`, `deploy/gunicorn-petcare.service`, `deploy/cron-recordatorios`, `deploy/env.produccion.ejemplo` y la sección 10 del README (pasos, tabla del grupo de seguridad y tabla de problemas frecuentes). `python manage.py check --deploy` sin advertencias con las variables de producción simuladas (prueba automatizada). |
-| **Qué revisé o corregí yo** | ✏️ Completar tras el despliegue: errores reales que aparecieron (502, 400 por `ALLOWED_HOSTS`, CSRF, permisos de `archivos_privados/`…), cómo los resolví y qué ajusté en los archivos de `deploy/`. |
-| **Archivos afectados** | `deploy/*`, `README.md` §10. |
+| **N° / Fecha** | 3.6 / 27/10/2026 |
+| **Herramienta** | Claude Code |
+| **Para qué** | Dejar todo coherente con la regla "todo exige iniciar sesión" y con las pruebas desde el servidor. |
+| **Qué le pedí (resumido)** | (1) Que `/api/docs/` y `/api/schema/` pidieran sesión iniciada, con una prueba que lo demuestre. (2) Que `ALLOWED_HOSTS` del servidor incluyera `localhost` y `127.0.0.1` para probar con `curl`. (3) Que corriera todas las verificaciones y solo subiera si todo pasaba. |
+| **Qué salió** | Sin sesión, esas dos direcciones llevan al login; los endpoints de la API siguen respondiendo 401. `ALLOWED_HOSTS` actualizado en `deploy/env.produccion.ejemplo` y en el README. Todo pasó y se subió. |
+| **Qué revisé o corregí yo** | Yo detecté que la documentación de la API estaba abierta a cualquiera, y puse la condición de no subir nada si algo fallaba. |
+| **Archivos** | `config/urls.py`, `core/test_seguridad.py`, `deploy/env.produccion.ejemplo`, `README.md`. |
+
+### 3.7 Revisión completa contra el enunciado y la rúbrica
+
+| Campo | Detalle |
+|---|---|
+| **N° / Fecha** | 3.7 / 28/10/2026 |
+| **Herramienta** | Claude Code |
+| **Para qué** | Saber con evidencia si el proyecto cumple todo lo que piden, antes de la defensa. |
+| **Qué le pedí (resumido)** | "Haz una revisión completa del proyecto y dime si cumple con el caso, los 4 requerimientos y los 5 criterios de la rúbrica." |
+| **Qué salió** | Recorrió 73 pantallas con los 4 roles (sin errores), y encontró **un error real** (el idioma y los estilos del calendario apuntaban a direcciones que no existen) y **varios huecos de CRUD en la web**. También me dijo con claridad lo que no estaba hecho: el despliegue en AWS y las partes de este archivo que solo yo puedo completar. |
+| **Qué revisé o corregí yo** | Decidí cerrar los huecos (entrada 3.8) y no esconder lo pendiente. |
+| **Archivos** | `templates/agenda/calendario.html`. |
+
+### 3.8 Cerrar los huecos de la revisión
+
+| Campo | Detalle |
+|---|---|
+| **N° / Fecha** | 3.8 / 28/10/2026 |
+| **Herramienta** | Claude Code |
+| **Para qué** | Que cada cosa tenga su CRUD completo también en la web. |
+| **Qué le pedí (resumido)** | "Corrige los huecos y haz el push." |
+| **Qué salió** | Las vacunas aplicadas ahora se pueden corregir (se recalcula la próxima dosis) y el administrador puede eliminarlas; los controles periódicos se pueden eliminar; y hay pantallas para gestionar profesionales (si tienen historial, se desactivan en vez de borrarse). 22 pruebas nuevas; en total **334 pruebas, todas pasan**. Las recetas y los exámenes siguen sin poder editarse ni borrarse a propósito, porque son parte del registro clínico. |
+| **Qué revisé o corregí yo** | Pedí cerrar todos los huecos y no subir nada sin que las verificaciones pasaran. ✏️ Anotar si probaste estas pantallas tú misma. |
+| **Archivos** | `vacunacion/*`, `agenda/*`, `templates/vacunacion/*`, `templates/agenda/profesional_lista.html`, `core/test_crud_completo.py`. |
+
+---
+
+## 4. Ayuda con el despliegue en AWS
+
+| Campo | Detalle |
+|---|---|
+| **N° / Fecha** | 4 / ✏️ (el día en que lo desplegué) |
+| **Herramienta** | Claude Code (archivos y guía) · ✏️ Claude chat, si lo usé al desplegar |
+| **Para qué** | Dejar listo y explicado el despliegue en EC2 (Ubuntu 24.04): PostgreSQL, Gunicorn, Nginx con HTTPS en `codelab-catalina.duckdns.org` (IP `54.152.231.63`), tarea diaria de recordatorios y grupo de seguridad. |
+| **Qué le pedí** | Parte del prompt principal (entrada 2): que Nginx envíe `X-Forwarded-Proto` con `include proxy_params`, las variables `DETRAS_DE_PROXY_HTTPS` y `CSRF_TRUSTED_ORIGINS`, y que el README explique el despliegue y que Nginx no muestre los archivos privados. ✏️ Agregar los otros mensajes que escribí durante el despliegue real. |
+| **Qué salió** | Los archivos `deploy/nginx-petcare.conf`, `deploy/gunicorn-petcare.service`, `deploy/cron-recordatorios`, `deploy/env.produccion.ejemplo` y la sección 10 del README (pasos, puertos del grupo de seguridad y tabla de problemas comunes). Una prueba automática confirma que `check --deploy` queda sin advertencias con las variables de producción. **Esos archivos todavía no se han probado en el servidor real.** |
+| **Qué revisé o corregí yo** | ✏️ Completar después de desplegar: qué errores aparecieron (502, 400 por `ALLOWED_HOSTS`, error de CSRF, permisos de `archivos_privados/`…), cómo los resolví y qué cambié en `deploy/`. |
+| **Archivos** | `deploy/*`, `README.md` §10. |
 
 ---
 
 ## Reflexión
 
-> ✏️ *Borrador para que lo adaptes con tus propias palabras antes de entregar.*
+> ✏️ *Esto es un borrador. Cámbialo con tus propias palabras antes de entregar.*
 
 **Lo que aprendí**
 
-1. **Las reglas importantes se defienden en dos capas.** Validar en Python da mensajes claros, pero solo la base de datos garantiza la regla cuando dos personas actúan a la vez. Por eso el solape de citas tiene un servicio *y* una `ExclusionConstraint`.
-2. **La lógica de negocio va en `servicios.py`, no en las vistas.** Así la web, la API, el Admin y el seed comparten la misma regla y no se puede esquivar entrando por otra puerta.
-3. **Seguridad de datos clínicos es más que el login.** Hay que pensar en el *objeto* (un tutor no ve lo de otro: 404), en los *archivos* (no deben estar en `/media/`) y en el *servidor* (Nginx no debe exponer esa carpeta).
-4. **Las pruebas encuentran lo que uno no ve.** Varias fallas (archivos privados, Admin y constraints, permisos del rol administrador) aparecieron solo al ejecutarlas.
-5. **Configuración fuera del código.** `python-decouple` y `.env` evitan secretos en el repositorio; y una variable *vacía* no usa el valor por defecto.
+1. **Las reglas importantes conviene cuidarlas en dos lugares.** El código puede avisar con un mensaje claro, pero solo la base de datos asegura la regla cuando dos personas actúan al mismo tiempo. Por eso las citas no se pueden pisar ni con el código ni con PostgreSQL.
+2. **La lógica va en `servicios.py` y no en las pantallas.** Así la web, la API, el Admin y los datos de ejemplo usan la misma regla y nadie se la puede saltar entrando por otro lado.
+3. **Proteger datos clínicos es más que pedir login.** Hay que cuidar cada dato (un tutor no ve lo de otro), los archivos (no deben estar en una carpeta pública) y el servidor (Nginx no debe mostrarlos).
+4. **Probar de verdad encuentra lo que uno no ve.** Varios errores (archivos privados, permisos del administrador, el calendario sin idioma) solo aparecieron al probar o al revisar.
+5. **Las claves no van en el código.** Se guardan en el archivo `.env`, y hay que recordar que una variable vacía no usa el valor por defecto.
 
-**Cómo usé la IA y qué cuidé**
+**Cómo usé la IA y en qué me fijé**
 
-- La usé como **asistente que acelera**, no como reemplazo: yo definí el problema, revisé el plan antes de que se escribiera código, tomé las decisiones de diseño (entrada 3.1) y mantuve el control de cuándo se sube algo al repositorio.
-- Exigí **verificación**: pruebas automatizadas, `check`, `check --deploy`, `makemigrations --check` y la validación del esquema OpenAPI.
-- Debo poder **explicar y defender cada parte** del código; para eso preparé `GUIA_DEFENSA.md` y revisé el código de cada servicio.
+- La usé como una ayuda para ir más rápido, no para que pensara por mí. Yo expliqué el problema, revisé el plan antes de que se escribiera código, tomé las decisiones de diseño (entrada 3.1) y decidí cuándo se sube algo al repositorio.
+- Exigí que todo se comprobara: pruebas automáticas, `check`, `check --deploy`, `makemigrations --check` y la validación de la documentación de la API.
+- Pedí una revisión completa al final (entrada 3.7) para encontrar lo que faltaba, en vez de asumir que todo estaba bien.
+- Tengo que poder explicar y defender cada parte del código; por eso preparé `GUIA_DEFENSA.md`.
 
-**Qué haría distinto / próximos pasos**
+**Qué haría distinto o mejoraría**
 
-- Agregar pruebas de carga y de concurrencia reales sobre la reserva de horarios.
-- Enviar los recordatorios por un canal real (SMTP o WhatsApp) y programar la ejecución con un supervisor.
-- Agregar auditoría completa (quién vio cada ficha) y respaldos automáticos de la base de datos y de `archivos_privados/`.
+- Probar de verdad qué pasa cuando muchas personas reservan a la vez.
+- Enviar los recordatorios por un canal real (correo o WhatsApp).
+- Guardar quién ve cada ficha clínica y hacer copias de seguridad automáticas de la base y de los archivos privados.
 
 ---
 
-## Anexo A — Prompt maestro completo (textual)
+## Anexo A — Prompt principal completo (textual)
 
 <details>
 <summary>Ver el prompt completo de la entrada 2</summary>
