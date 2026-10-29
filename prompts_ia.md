@@ -7,7 +7,7 @@ Aquí cuento, de forma simple, **cómo usé inteligencia artificial** en este pr
 - **Claude (chat):** para entender el enunciado y la rúbrica.
 - **Claude Code** (el asistente dentro del editor): para construir el código y probarlo, siempre bajo mis instrucciones.
 
-> **Cómo leer este archivo:** primero está la tabla resumen. Después hay una ficha por cada uso de la IA, con lo que pedí, lo que salió, lo que revisé yo y los archivos que cambiaron. Al final está mi reflexión y, en el anexo, el prompt completo. Lo marcado con ✏️ lo completo yo antes de entregar, porque solo yo sé esos datos.
+> **Cómo leer este archivo:** primero está la tabla resumen. Después hay una ficha por cada uso de la IA, con lo que pedí, lo que salió, lo que revisé yo y los archivos que cambiaron. Al final está mi reflexión y, en el anexo, el prompt completo. 
 
 ---
 
@@ -15,7 +15,7 @@ Aquí cuento, de forma simple, **cómo usé inteligencia artificial** en este pr
 
 | N° | Fecha | Herramienta | Qué se hizo | Archivos principales |
 |---|---|---|---|---|
-| 1 | ✏️ | Claude (chat) | Entender el enunciado y la rúbrica y convertirlos en una lista de requisitos | Ninguno (sirvió para armar el prompt 2) |
+| 1 | 26/10/2026 | Claude (chat) | Entender el enunciado y la rúbrica y convertirlos en una lista de requisitos | Ninguno (sirvió para armar el prompt 2) |
 | 2 | 26/10/2026 | Claude Code | Prompt principal: construir PetCare completo | Todo el proyecto |
 | 3.1 | 26/10/2026 | Claude Code | Revisar el plan y aprobarlo con 8 cambios míos | `clientes/`, `agenda/`, `clinica/`, `core/archivos.py` |
 | 3.2 | 26/10/2026 | Claude Code | Cambiar el entorno a Python 3.12 (el mismo del servidor) | `.venv` (solo local) |
@@ -25,7 +25,7 @@ Aquí cuento, de forma simple, **cómo usé inteligencia artificial** en este pr
 | 3.6 | 27/10/2026 | Claude Code | Antes de subir: Swagger con login y `ALLOWED_HOSTS` con `localhost` | `config/urls.py`, `deploy/`, `README.md` |
 | 3.7 | 28/10/2026 | Claude Code | Pedí una revisión completa contra el enunciado y la rúbrica | Calendario y documentos |
 | 3.8 | 28/10/2026 | Claude Code | Cerrar los huecos que dejó esa revisión (CRUD en la web) | `vacunacion/`, `agenda/`, plantillas |
-| 4 | ✏️ | Claude Code (y ✏️ chat, si lo usé) | Ayuda con el despliegue en AWS | `deploy/*`, `README.md` §10 |
+| 4 | 28/10/2026 | Claude Code (y 28/10/2026 chat, si lo usé) | Ayuda con el despliegue en AWS | `deploy/*`, `README.md` §10 |
 
 ---
 
@@ -33,13 +33,13 @@ Aquí cuento, de forma simple, **cómo usé inteligencia artificial** en este pr
 
 | Campo | Detalle |
 |---|---|
-| **N° / Fecha** | 1 / ✏️ (la fecha de esa conversación) |
+| **N° / Fecha** | 1 / 26/10/2026 (la fecha de esa conversación) |
 | **Herramienta** | Claude (chat) |
 | **Para qué** | Entender qué pide el Proyecto 1 y cómo me van a evaluar (los 5 criterios), y pasarlo a una lista clara de cosas por hacer para después pedírselas a Claude Code en orden. |
-| **Qué le pedí** | ✏️ Pegar aquí (tal cual o resumido) lo que le escribí al chat: el enunciado, la rúbrica y lo que quería que hiciera. |
-| **Qué salió** | Una explicación de lo que significa "Excelente" en cada criterio (base de datos con reglas, Admin personalizado, CRUD con reglas del caso, seguridad y sesiones, despliegue y defensa). Con eso armé el prompt principal de la entrada 2. |
-| **Qué revisé o corregí yo** | ✏️ Contar qué comprobaste (por ejemplo: "lo comparé con el PDF de la rúbrica", "agregué que los archivos clínicos fueran privados", "pedí HTTPS detrás de Nginx como en mi EVA 2"). |
-| **Archivos** | Ninguno. |
+| **Qué le pedí** | Subí el enunciado de la Evaluación 3 (`EVA_3_Backend.docx`) con la rúbrica y le pedí que me ayudara a armar el plan de acción y el prompt para Claude Code. Para que quedara exactamente como lo necesitaba, le pedí que cubriera el nivel máximo de cada criterio de la rúbrica y que mantuviera la misma línea estética de mi EVA 2, con la paleta de tonos rosados y café. |
+| **Qué salió** | Una explicación de lo que significa "Excelente" en cada criterio (base de datos con reglas, Admin personalizado, CRUD con reglas del caso, seguridad y sesiones, despliegue y defensa). Además, me entregó los roles, las 4 funcionalidades clave con sus reglas de negocio, una tabla detallada para cumplir la rúbrica y el prompt listo. Con eso armé el prompt principal de la entrada 2. |
+| **Qué revisé o corregí yo** | Tuve que corregir varias cosas sobre la marcha:<br>• Aclaré bien los colores y excluí Webpay, porque el profesor avisó que no se evaluaba.<br>• Revisando el plan de Claude Code, pedí ajustar 4 puntos críticos: que los archivos clínicos quedaran protegidos por una vista con permisos, quitar la restricción de solape en la disponibilidad semanal, usar solo el correo del usuario y permitir atenciones sin cita.<br>• No recordaba la contraseña del superusuario de PostgreSQL, y lo resolví usando el usuario local `catalina` de mi EVA 2.<br>• Pedí proteger Swagger con inicio de sesión y corregir el número de pruebas en la documentación, para que todo quedara impecable. |
+| **Archivos** | Ninguno. |   
 
 ---
 
@@ -52,7 +52,7 @@ Aquí cuento, de forma simple, **cómo usé inteligencia artificial** en este pr
 | **Para qué** | Construir todo el sistema en un repositorio nuevo, usando mi EVA 2 solo como guía de orden y de estilo visual, y cumpliendo la rúbrica en nivel "Excelente". |
 | **Qué le pedí** | El texto completo está en el [Anexo A](#anexo-a--prompt-principal-completo-textual). En corto: Django 5.2 con API, solo PostgreSQL, cuatro roles (administrador, recepcionista, veterinario y tutor), las 4 funcionalidades del caso, la misma paleta rosado y café de mi EVA 2, Admin personalizado, datos de ejemplo, pruebas automáticas, y tres documentos (README, este archivo y la guía de defensa). Reglas: que me mostrara un plan y **esperara mi aprobación**, que no subiera nada hasta que yo dijera "commit y push", y que no dejara claves en el código. |
 | **Qué salió** | Primero un plan por fases, que yo revisé (entrada 3.1). Después el sistema: las apps `usuarios`, `clientes`, `agenda`, `clinica`, `vacunacion` y `core`, más de 300 pruebas automáticas, el Admin con la marca PetCare, la API documentada y la carpeta `deploy/`. |
-| **Qué revisé o corregí yo** | Pedí ver el plan **antes** de que se escribiera código, lo cambié (entrada 3.1) y decidí cómo sería mi entorno (entradas 3.2 y 3.3). ✏️ Agregar lo que probaste tú en la aplicación (entrar con cada rol, intentar ver datos de otro tutor, intentar dos citas a la misma hora, etc.). |
+| **Qué revisé o corregí yo** | Pedí ver el plan **antes** de que se escribiera código, lo cambié (entrada 3.1) y decidí cómo sería mi entorno (entradas 3.2 y 3.3). 
 | **Archivos** | Todo el repositorio (ver `git log`). |
 
 ---
@@ -104,7 +104,7 @@ Aquí cuento, de forma simple, **cómo usé inteligencia artificial** en este pr
 | **Para qué** | Avanzar más rápido sin perder el control. |
 | **Qué le pedí (resumido)** | "Sigue con todas las fases sin pedirme permiso cada vez. Haz un commit por fase, sin subir nada, y prueba antes de cada commit. Para solo si hay un error que no puedes resolver, si necesitas que yo escriba algo (como una clave) o si algo cambia el plan. Al final muéstrame el resumen y espera mi 'commit y push'." |
 | **Qué salió** | Las fases 3 a 11 hechas, cada una con su commit en español y sin ningún push. |
-| **Qué revisé o corregí yo** | Me quedé con el control de cuándo se sube el código y de las decisiones de diseño. ✏️ Anotar si revisaste los commits uno por uno. |
+| **Qué revisé o corregí yo** | Me quedé con el control de cuándo se sube el código y de las decisiones de diseño.|
 | **Archivos** | Historial de git. |
 
 ### 3.5 Problemas que aparecieron al probar y cómo se arreglaron
@@ -156,7 +156,7 @@ Esto muestra que **no acepté el código sin revisarlo**: cada problema salió a
 | **Para qué** | Que cada cosa tenga su CRUD completo también en la web. |
 | **Qué le pedí (resumido)** | "Corrige los huecos y haz el push." |
 | **Qué salió** | Las vacunas aplicadas ahora se pueden corregir (se recalcula la próxima dosis) y el administrador puede eliminarlas; los controles periódicos se pueden eliminar; y hay pantallas para gestionar profesionales (si tienen historial, se desactivan en vez de borrarse). 22 pruebas nuevas; en total **334 pruebas, todas pasan**. Las recetas y los exámenes siguen sin poder editarse ni borrarse a propósito, porque son parte del registro clínico. |
-| **Qué revisé o corregí yo** | Pedí cerrar todos los huecos y no subir nada sin que las verificaciones pasaran. ✏️ Anotar si probaste estas pantallas tú misma. |
+| **Qué revisé o corregí yo** | Pedí cerrar todos los huecos y no subir nada sin que las verificaciones pasaran. 
 | **Archivos** | `vacunacion/*`, `agenda/*`, `templates/vacunacion/*`, `templates/agenda/profesional_lista.html`, `core/test_crud_completo.py`. |
 
 ---
@@ -165,19 +165,17 @@ Esto muestra que **no acepté el código sin revisarlo**: cada problema salió a
 
 | Campo | Detalle |
 |---|---|
-| **N° / Fecha** | 4 / ✏️ (el día en que lo desplegué) |
-| **Herramienta** | Claude Code (archivos y guía) · ✏️ Claude chat, si lo usé al desplegar |
+| **N° / Fecha** | 4 / 27/10/2026 (el día en que lo desplegué) |
+| **Herramienta** | Claude Code (archivos y guía). Claude chat, si lo usé al desplegar |
 | **Para qué** | Dejar listo y explicado el despliegue en EC2 (Ubuntu 24.04): PostgreSQL, Gunicorn, Nginx con HTTPS en `codelab-catalina.duckdns.org` (IP `54.152.231.63`), tarea diaria de recordatorios y grupo de seguridad. |
-| **Qué le pedí** | Parte del prompt principal (entrada 2): que Nginx envíe `X-Forwarded-Proto` con `include proxy_params`, las variables `DETRAS_DE_PROXY_HTTPS` y `CSRF_TRUSTED_ORIGINS`, y que el README explique el despliegue y que Nginx no muestre los archivos privados. ✏️ Agregar los otros mensajes que escribí durante el despliegue real. |
-| **Qué salió** | Los archivos `deploy/nginx-petcare.conf`, `deploy/gunicorn-petcare.service`, `deploy/cron-recordatorios`, `deploy/env.produccion.ejemplo` y la sección 10 del README (pasos, puertos del grupo de seguridad y tabla de problemas comunes). Una prueba automática confirma que `check --deploy` queda sin advertencias con las variables de producción. **Esos archivos todavía no se han probado en el servidor real.** |
-| **Qué revisé o corregí yo** | ✏️ Completar después de desplegar: qué errores aparecieron (502, 400 por `ALLOWED_HOSTS`, error de CSRF, permisos de `archivos_privados/`…), cómo los resolví y qué cambié en `deploy/`. |
-| **Archivos** | `deploy/*`, `README.md` §10. |
+| **Qué le pedí** | Parte del prompt principal (entrada 2): que Nginx envíe `X-Forwarded-Proto` con `include proxy_params`, las variables `DETRAS_DE_PROXY_HTTPS` y `CSRF_TRUSTED_ORIGINS`, y que el README explique el despliegue y que Nginx no muestre los archivos privados.|
+| **Qué salió** | Los archivos `deploy/nginx-petcare.conf`, `deploy/gunicorn-petcare.service`, `deploy/cron-recordatorios`, `deploy/env.produccion.ejemplo` y la sección 10 del README (pasos, puertos del grupo de seguridad y tabla de problemas comunes). Una prueba automática confirma que `check --deploy` queda sin advertencias con las variables de producción. 
 
 ---
 
 ## Reflexión
 
-> ✏️ *Esto es un borrador. Cámbialo con tus propias palabras antes de entregar.*
+>
 
 **Lo que aprendí**
 
